@@ -48,4 +48,4 @@ function intervalFunc() {
     }
 }
   
-setInterval(intervalFunc, 5000);
+// setInterval(intervalFunc, 5000);
