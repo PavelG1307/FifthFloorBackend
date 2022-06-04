@@ -1,0 +1,33 @@
+{
+    "active": true,
+    "lamp": 8,
+    "rings": {
+        "1": {
+            "time": 1234,
+            "music": false,
+            "sunrise": true
+        },
+        "2": {
+            "time": 1236,
+            "music": false,
+            "sunrise": true
+        }
+    },
+    "sensors": {
+        "13454": {
+            "type": 1,
+            "value": 4,
+            "time": 1223
+        },
+        "13456": {
+            "type": 1,
+            "value": 4,
+            "time": 1223
+        }
+    },
+    "guard": false,
+    "speaker": 0,
+    "nightlight": false,
+    "time": 1234,
+    "battery": "11.2 V"
+}
