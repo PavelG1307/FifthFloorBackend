@@ -37,12 +37,12 @@
             "active": true,
             "type": 2
         },
-        "13452": {
+        "13460": {
             "name": "Вход",
             "time": 1222,
             "location": "Прихожая",
-            "active": true,
-            "type": 3
+            "active": false,
+            "type": 10
         }
     },
     "guard": false,
