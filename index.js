@@ -1,12 +1,13 @@
 
 const WebSocket = require('ws');
-const datajs = require('./test.json')
 const Datastore = require('nedb');
 
+let datajs;
 const db = new Datastore({filename : 'db'});
 db.loadDatabase();
 
-const wsServer = new WebSocket.Server({port: 8800});
+const port = 8800;
+const wsServer = new WebSocket.Server({port: port});
 const clients = {}
 
 wsServer.on('connection', onConnect);
@@ -38,10 +39,11 @@ function onConnect(wsClient) {
     })
 }
 
-console.log('Сервер запущен на 9000 порту');
+console.log(`Сервер запущен на ${port} порту`);
 
 function intervalFunc() {
     for (const id in clients) {
+        datajs = require('./test.json');
         datajs["time"] += 1;
         clients[id].send(JSON.stringify(datajs))
         console.log("send data")
