@@ -18,13 +18,15 @@
             "name": "Температура",
             "value": "15°C",
             "time": 1223,
-            "location": "Комната"
+            "location": "Комната",
+            "active": true
         },
         "13457": {
             "name": "Влажность",
             "value": "60%",
             "time": 1222,
-            "location": "Кухня"
+            "location": "Кухня",
+            "active": true
         }
     },
     "guard": false,
