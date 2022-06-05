@@ -14,7 +14,7 @@ wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
     console.log("New client");
-
+    intervalFunc()
     wsClient.on('message', function(rawMessage) {
         console.log('received: %s', rawMessage);
         try {
