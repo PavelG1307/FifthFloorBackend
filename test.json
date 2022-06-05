@@ -29,6 +29,13 @@
             "location": "Кухня",
             "active": true,
             "type": 1
+        },
+        "13459": {
+            "name": "Вход",
+            "time": 1222,
+            "location": "Прихожая",
+            "active": true,
+            "type": 2
         }
     },
     "guard": false,
