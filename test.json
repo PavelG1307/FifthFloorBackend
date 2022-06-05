@@ -36,6 +36,13 @@
             "location": "Прихожая",
             "active": true,
             "type": 2
+        },
+        "13452": {
+            "name": "Вход",
+            "time": 1222,
+            "location": "Прихожая",
+            "active": true,
+            "type": 3
         }
     },
     "guard": false,
