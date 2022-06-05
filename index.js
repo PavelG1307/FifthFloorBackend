@@ -1,7 +1,8 @@
 
 const WebSocket = require('ws');
 const fs = require('fs');
-const https = require('http');
+C
+const https = require('https');
 const Datastore = require('nedb');
 
 let datajs;
@@ -16,7 +17,8 @@ const server = https.createServer({
     res.end("Nice");
   });
 
-const port = 8800;
+
+const port = 80;
 const wsServer = new WebSocket.Server({server});
 const clients = {}
 
