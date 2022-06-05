@@ -29,5 +29,5 @@
     "speaker": 0,
     "nightlight": false,
     "time": 1234,
-    "battery": "11.2 V"
+    "battery": 11.2
 }
