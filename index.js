@@ -1,7 +1,7 @@
 
 const WebSocket = require('ws');
 const fs = require('fs');
-const https = require('https');
+const https = require('http');
 const Datastore = require('nedb');
 
 let datajs;
