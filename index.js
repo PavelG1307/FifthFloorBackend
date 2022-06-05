@@ -1,8 +1,7 @@
 
 const WebSocket = require('ws');
 const fs = require('fs');
-C
-const https = require('https');
+const https = require('http');
 const Datastore = require('nedb');
 
 let datajs;
@@ -10,7 +9,7 @@ const db = new Datastore({filename : 'db'});
 db.loadDatabase();
 
 const server = https.createServer({
-    cert: fs.readFileSync('./rootCA.pem'),
+    cert: fs.readFileSync('./domain.pem'),
     key: fs.readFileSync('./rootCA.key')
   }, (req, res) => {
     console.log("Request");
