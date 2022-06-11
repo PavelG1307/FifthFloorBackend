@@ -16,7 +16,7 @@ db.loadDatabase();
 //     res.end("Nice");
 //   });
 
-const port = 8800;
+const port = 80;
 const wsServer = new WebSocket.Server({port: port});
 const clients = {}
 
