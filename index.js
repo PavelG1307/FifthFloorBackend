@@ -1,23 +1,24 @@
 
 const WebSocket = require('ws');
-// const fs = require('fs');
-const https = require('http');
+const fs = require('fs');
+const https = require('https');
 const Datastore = require('nedb');
 
 let datajs;
 const db = new Datastore({filename : 'db'});
 db.loadDatabase();
 
-// const server = https.createServer({
-//     cert: fs.readFileSync('./domain.pem'),
-//     key: fs.readFileSync('./rootCA.key')
-//   }, (req, res) => {
-//     console.log("Request");
-//     res.end("Nice");
-//   });
+const server = https.createServer({
+    cert: fs.readFileSync('./certssl.pem'),
+    key: fs.readFileSync('./keyssl.pem'),
+    passphrase: '1111'
+  }, (req, res) => {
+    console.log("Request");
+    res.end("Nice");
+  });
 
 const port = 80;
-const wsServer = new WebSocket.Server({port: port});
+const wsServer = new WebSocket.Server({server});
 const clients = {}
 
 wsServer.on('connection', onConnect);
@@ -60,6 +61,6 @@ function intervalFunc() {
     }
 }
 
-// server.listen(port);
+server.listen(port);
 
 setInterval(intervalFunc, 10000);
