@@ -2,6 +2,7 @@
 const WebSocket = require('ws');
 const fs = require('fs');
 const https = require('https');
+// const http = require('http');
 const Datastore = require('nedb');
 
 let datajs;
@@ -17,8 +18,10 @@ const server = https.createServer({
     res.end("Nice");
   });
 
+
 const port = 8080;
 const wsServer = new WebSocket.Server({server});
+// const wsServer = new WebSocket.Server({port: port});
 const clients = {}
 
 wsServer.on('connection', onConnect);
@@ -30,16 +33,20 @@ function onConnect(wsClient) {
         console.log('received: %s', rawMessage);
         try {
             const message = JSON.parse(rawMessage);
-            db.find({tokken: message.tokken}, function (err, docs) {
-                console.log(docs.length)
-                if (docs.length > 0) {
-                    const id = docs[0]["_id"];
-                    console.log(id);
-                    clients["id"] = wsClient;
-                } else{
-                    db.insert({tokken : message.tokken});
-                }
-            });
+            clients[message.tokken] = wsClient;
+            // db.find({tokken: message.tokken}, function (err, docs) {
+            //     console.log(docs)
+                
+            //     if (docs.length > 0) {
+            //         const id = docs[0]["_id"];
+            //         console.log(id);
+            //         clients[id] = wsClient;
+            //     } else{
+            //         db.insert({tokken : message.tokken});
+            //         clients["id"] = wsClient;
+            //         console.log("add new user")
+            //     }
+            // });
         } catch (error) {
             console.log('Ошибка', error);
         }
