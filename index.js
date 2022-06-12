@@ -10,7 +10,7 @@ const db = new Datastore({filename : 'db'});
 db.loadDatabase();
 
 const server = https.createServer({
-    cert: fs.readFileSync('./certssl.pem'),
+    cert: fs.readFileSync('./fullchain.pem'),
     key: fs.readFileSync('./keyssl.pem'),
     passphrase: '1111'
   }, (req, res) => {
