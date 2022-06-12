@@ -19,7 +19,7 @@ const server = https.createServer({
   });
 
 
-const port = 8080;
+const port = 80;
 const wsServer = new WebSocket.Server({server});
 // const wsServer = new WebSocket.Server({port: port});
 const clients = {}
