@@ -17,7 +17,7 @@ const server = https.createServer({
     res.end("Nice");
   });
 
-const port = 80;
+const port = 8080;
 const wsServer = new WebSocket.Server({server});
 const clients = {}
 
