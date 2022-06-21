@@ -1,24 +1,30 @@
 {
-  "name": "server",
+  "name": "fifth_floor_server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PavelG1307/fifth_floor_server.git"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.3",
+    "ws": "^8.8.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.1",
-    "mysql": "^2.18.1",
-    "mysql2": "^2.3.3",
-    "nedb": "^1.8.0",
-    "nodemon": "^2.0.16",
-    "socket.io": "^4.5.1",
-    "sqlite": "^4.1.1",
-    "uuid": "^8.3.2",
-    "ws": "^8.7.0"
+  "bugs": {
+    "url": "https://github.com/PavelG1307/fifth_floor_server/issues"
+  },
+  "homepage": "https://github.com/PavelG1307/fifth_floor_server#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
