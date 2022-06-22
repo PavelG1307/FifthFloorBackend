@@ -1,5 +1,7 @@
 const WebSocket = require('ws');
+const {checkToken} = require('./authControl.js');
 const UserControllers = require('./controllers/user.controllers.js');
+const DeviceControllers = require('./controllers/device.controllers.js');
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
 
@@ -10,32 +12,42 @@ function onConnect(wsClient) {
 
     wsClient.on('message', async function(rawMessage) {
         let message = JSON.parse(rawMessage)
-        let {type} = message
-        console.log('received: ', message);
-        switch (type) {
-
-            case "CONNECTED":
-                console.log("Connected")
-                break
-
-            case "SIGN IN":
-                res = await UserControllers.getUser(message.login, message.password)
-                wsClient.send(JSON.stringify(res))
-                break
-
-            case "REGISTRATION":
-                res = await UserControllers.createUser(message.login, message.password)
-                wsClient.send(JSON.stringify(res))
-                break
-                
-            default:
-                console.log('error')
-        }
+        res = await answer(message)
+        wsClient.send(JSON.stringify(res))
+        
     })
 
     wsClient.on('close', function() {
         console.log('Пользователь отключился');
     })
+}
+
+
+async function answer(message) {
+    const {token, type} = message
+    user = await checkToken(token)
+    if (!user && type != "SIGN IN" && type != "REGISTRATION") {
+        return {error: "Token invalid"}
+    } else {
+        switch (type) {
+            case "CONNECTED":
+                return await DeviceControllers.getStatus(user.id)
+
+            case "SIGN IN":
+                return await UserControllers.getUser(message.login, message.password)
+
+            case "REGISTRATION":
+                return await UserControllers.createUser(message.login, message.password, message.email, message.phone_number)
+            
+            case "GET STATUS":
+                return await DeviceControllers.getStatus(user.id)
+            
+            case "ADD STATION":
+                return await DeviceControllers.addStation(user.id, message.key)
+            default:
+                return {error: "Bad request"}
+        }
+    }
 }
 
 wsServer.on('listening', () => {console.log(`Сервер запущен на ${port} порту`)});

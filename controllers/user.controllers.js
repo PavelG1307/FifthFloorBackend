@@ -4,11 +4,11 @@ const jwt = require('../authControl.js')
 
 class UserController {
 
-    async createUser(login, password) {
+    async createUser(login, password, email, phone_number) {
         const hash_password = bcrypt.hashSync(password,7)
         const role = 'USER'
         if (await CheckLogin(login)) {
-            const newUser = await db.query(`INSERT INTO users (login,password,role) VALUES ($1,$2,$3) RETURNING *`, [login, hash_password, role])
+            const newUser = await db.query(`INSERT INTO users (login,password,role,email,phonenumber) VALUES ($1,$2,$3,$4,$5) RETURNING *`, [login, hash_password, role, email, phone_number])
             const token = await jwt.generateToken(newUser.id, newUser.login, newUser.role)
             return {error: null, token: token}
         } else {
@@ -17,16 +17,21 @@ class UserController {
     }
 
     async getUser(login, password) {
-        const hash_password = bcrypt.hashSync(password,7)
-        const this_user = (await db.query(`SELECT id, password, role FROM users WHERE login = $1`, [login])).rows[0]
-        if (this_user) {
-            const Validpassword = bcrypt.compareSync(password, this_user.password)
-            if (Validpassword) {
-                const token = await jwt.generateToken(this_user.id, this_user.login, this_user.role)
-                return {error: null, token: token}
+        try{
+            const hash_password = bcrypt.hashSync(password,7)
+            const this_user = (await db.query(`SELECT id, password, role FROM users WHERE login = $1`, [login])).rows[0]
+            if (this_user) {
+                const Validpassword = bcrypt.compareSync(password, this_user.password)
+                if (Validpassword) {
+                    const token = await jwt.generateToken(this_user.id, this_user.login, this_user.role)
+                    return {error: null, token: token}
+                }
             }
+            return {error: 'USER NOT FOUND', user: null}
+        } catch(e) {
+            console.log(e)
+            return {error: 'Error on server'}
         }
-        return {error: 'USER NOT FOUND', user: null}
     }
     async getUsers() {
         

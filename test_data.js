@@ -1,4 +1,4 @@
-{
+module.exports = {
     "active": true,
     "lamp": 8,
     "rings": {
