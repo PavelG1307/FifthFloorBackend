@@ -8,7 +8,7 @@ const clientId = `Server`
 const connectUrl = `mqtt://${host}:${port}`
 
 stations_id = ['1232', '23223', '23121']
-
+const subtopic = ['/status', '/modules']
 const client = mqtt.connect(connectUrl, {
   clientId,
   clean: true,
@@ -22,11 +22,13 @@ const topic = `/${clientId}/status`
 
 client.on('connect', () => {
   console.log('Connected')
-  for (i in stations_id) {
-        const topic = stations_id[i] + '/status'
-        client.subscribe([topic], () => {
-        console.log(`Subscribe to topic ${topic}`)
-      })
+  for (j in subtopic) {
+    for (i in stations_id) {
+            const topic = stations_id[i] + subtopic[j]
+            client.subscribe([topic], () => {
+            console.log(`Subscribe to topic ${topic}`)
+        })
+    }
   }
   
 
@@ -42,14 +44,14 @@ client.on('message', onMessage)
 
 
 async function onMessage(topic, payload){
-    
+
     const id = topic.split('/')[0]
     const endpoint = topic.split('/')[1]
 
     switch(endpoint) {
         case 'status':
             await MQTTRouters.ParseStatus(id, payload.toString())
-        case 'module':
+        case 'modules':
             await MQTTRouters.ParseModuleMessage(id, payload.toString())
     }
   console.log('Received Message:', topic, payload.toString())

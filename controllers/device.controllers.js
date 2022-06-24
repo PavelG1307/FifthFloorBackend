@@ -73,9 +73,7 @@ class DeviceControllers{
         }
     }
 
-    async updateModule(id_user, id_module, value, time, type, location){
-
-    }
+    
 
     async deleteModule(id_module) {
         try{
@@ -152,11 +150,17 @@ class DeviceControllers{
                 )
             }
             // ночник
+
+
         } catch(e) {
             consle.log(e)
         }
     }
 
+    async updateModules(status_message){
+        console.log(status_message)
+
+    }
 }
 
 module.exports = new DeviceControllers()

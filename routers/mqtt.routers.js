@@ -39,8 +39,24 @@ class MQTTRouters {
         // console.log(`Яркость: ${brightness}\nБудильники: ${JSON.stringify(rings)}\nНочник: ${JSON.stringify(nightlight)}\nКолонка: ${JSON.stringify(speaker)}\nНапряжение: ${voltage}\nВремя: ${time}`)
     }
 
-    async ParseModuleMessage(id, message){
-
+    async ParseModuleMessage(id, status_message){
+        const parsemessage = status_message.split(' ')
+        const key_stations = parsemessage[0]
+        if (!(await this.check_key(key_stations))) {
+            return
+        }
+        const count_modules = (parsemessage.length-1)/4
+        const modules = []
+        console.log(count_modules)
+        for (let i = 0; i < count_modules; i++) {
+            modules.push({
+                id: parsemessage[i * 4 + 1],
+                type: parsemessage[i * 4 + 2],
+                value: parsemessage[i * 4 + 3],
+                time_update: parsemessage[i * 4 + 4]
+            })
+        }
+        deviceControllers.updateModules(modules)
     }
 
     async check_key(key_stations) {
