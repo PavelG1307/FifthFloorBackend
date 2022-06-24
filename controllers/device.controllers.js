@@ -156,10 +156,30 @@ class DeviceControllers{
             consle.log(e)
         }
     }
+    async updateModule(id_module, type, value, time_update){
+        const user_id = db.query(`
+            UPDATE modules
+            SET id_module = $1,
+                type = $2,
+                value = $3,
+                time_update = $4
+            RETURNING user_id
+            `, [
+                id_module,
+                type,
+                value,
+                time_update
+            ]
+        )
+        console.log(user_id)
+
+    }
 
     async updateModules(status_message){
         console.log(status_message)
-
+        for (let i in status_message) {
+            await this.updateModule(status_message[i].id, status_message[i].type, status_message[i].value, status_message[i].time_update)
+        }
     }
 }
 
