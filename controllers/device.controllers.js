@@ -44,46 +44,7 @@ class DeviceControllers{
         }
     }
 
-    async getModules(id_station) {
-        const modules = (await db.query(`SELECT * FROM modules WHERE station_id = $1`, [id_station])).rows
-        if (modules) {
-            modules.forEach((mod) => {
-                if (Date.now()-mod.time < 3000) {
-                    mod.active = true
-                } else {
-                    mod.active = false
-                }
-            })
-            return modules
-        }
-        return {}
-    }
 
-    async addModule(user_id, station_id, id_module, type, time, value, location, name_module) {
-        try{
-            module = await db.query(
-                'INSERT INTO modules (location, last_value, time, station_id, user_id, type, id_module, name) VALUES ($1,$2,NOW(),$3,$4,$5,$6,$7) RETURNING *',
-                [location, value, station_id, user_id, type, id_module, name_module]
-                )
-            console.log(module)
-            return module
-        } catch(e) {
-            console.log(e)
-            return {error: 'Server Error'}
-        }
-    }
-
-    
-
-    async deleteModule(id_module) {
-        try{
-            await db.query("DELETE FROM modules WHERE id_module = $1", [id_module])
-            return {error: null, message: 'Success'}
-        } catch(e){
-            console.log(e)
-            return {error: 'Server Error'}
-        }
-    }
 
     async getRings(id_user, id_station) {
         let rings
@@ -156,6 +117,48 @@ class DeviceControllers{
             consle.log(e)
         }
     }
+
+    async getModules(id_station) {
+        const modules = (await db.query(`SELECT * FROM modules WHERE station_id = $1`, [id_station])).rows
+        if (modules) {
+            modules.forEach((mod) => {
+                if (Date.now()-mod.time < 3000) {
+                    mod.active = true
+                } else {
+                    mod.active = false
+                }
+            })
+            return modules
+        }
+        return {}
+    }
+
+    async addModule(user_id, station_id, id_module, type, time, value, location, name_module) {
+        try{
+            module = await db.query(
+                'INSERT INTO modules (location, last_value, time, station_id, user_id, type, id_module, name) VALUES ($1,$2,NOW(),$3,$4,$5,$6,$7) RETURNING *',
+                [location, value, station_id, user_id, type, id_module, name_module]
+                )
+            console.log(module)
+            return module
+        } catch(e) {
+            console.log(e)
+            return {error: 'Server Error'}
+        }
+    }
+
+    
+
+    async deleteModule(id_module) {
+        try{
+            await db.query("DELETE FROM modules WHERE id_module = $1", [id_module])
+            return {error: null, message: 'Success'}
+        } catch(e){
+            console.log(e)
+            return {error: 'Server Error'}
+        }
+    }
+
     async updateModule(id_module, type, value, time_update){
         const user_id = db.query(`
             UPDATE modules

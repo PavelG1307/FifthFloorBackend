@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 const {checkToken} = require('./authControl.js');
 const UserControllers = require('./controllers/user.controllers.js');
 const DeviceControllers = require('./controllers/device.controllers.js');
+const mqtt = require('./mqtt.js')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
 
@@ -51,3 +52,4 @@ async function answer(message) {
 }
 
 wsServer.on('listening', () => {console.log(`Сервер запущен на ${port} порту`)});
+mqtt.runMQTT()

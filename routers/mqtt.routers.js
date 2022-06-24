@@ -56,7 +56,7 @@ class MQTTRouters {
                 time_update: parsemessage[i * 4 + 4]
             })
         }
-        deviceControllers.updateModules(modules)
+        await deviceControllers.updateModules(modules)
     }
 
     async check_key(key_stations) {
