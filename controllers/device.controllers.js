@@ -58,10 +58,6 @@ class DeviceControllers{
         }
         return {}
     }
-    
-    async updateStatus(id_user, status){
-
-    }
 
     async addModule(user_id, station_id, id_module, type, time, value, location, name_module) {
         try{
@@ -83,7 +79,7 @@ class DeviceControllers{
 
     async deleteModule(id_module) {
         try{
-            await db.query(`DELETE FROM modules WHERE id_module = $1`, [id_module])
+            await db.query("DELETE FROM modules WHERE id_module = $1", [id_module])
             return {error: null, message: 'Success'}
         } catch(e){
             console.log(e)
@@ -112,6 +108,53 @@ class DeviceControllers{
 
     async setRing() {
 
+    }
+
+    async setStatus(status) {
+        try{
+            console.log(status)
+            const {user_id, station_id} = db.query(
+            `UPDATE stations
+            SET time = $1,
+                battery = $2,
+                lamp = $3,
+                last_update = NOW(),
+                guard = $4,
+                speaker = $5
+            WHERE id = $6
+            RETURNING user_id, station_id;`,
+            [status.time,
+            status.voltage,
+            status.brightness,
+            status.guard,
+            status.speaker.volume,
+            status.id]
+            )
+            const rings_id = db.query(`
+                UPDATE rings
+                SET active = false
+                WHERE station_id = $1
+                RETURNING id`,
+                [station_id]
+                )
+            for (var i in status.rings) {
+                db.query(`
+                UPDATE rings 
+                SET active = true,
+                    time = $1,
+                    sunrise = $2,
+                    music = $3
+                WHERE id = $4`,
+                [status.rings[i].time,
+                status.rings[i].sunrise,
+                status.rings[i].music,
+                rings_id[status.rings[i].id]]
+                )
+            }
+            // ночник
+        } catch(e) {
+            consle.log(e)
+        }
     }
 
 }
