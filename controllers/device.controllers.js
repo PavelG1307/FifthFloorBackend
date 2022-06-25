@@ -30,6 +30,7 @@ class DeviceControllers{
     async addStation(id_user, secret_key) {
         try{
             const station = await db.query(`INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, $1, false, 0, $2, NOW()) RETURNING *`,[id_user, secret_key])
+            console.log(station)
             if (station) {
                 for (let i = 0; i<5; i++){
                     await db.query(`INSERT INTO rings (name, time, active, visible, sunrise, music, user_id, station_id) VALUES ('ring', 0, false, false, true, 0, $1, $2)`,[id_user, station.id])
@@ -95,9 +96,9 @@ class DeviceControllers{
             const rings_id = db.query(`
                 UPDATE rings
                 SET active = false
-                WHERE station_id = $1
+                WHERE user_id = $1
                 RETURNING id`,
-                [station_id]
+                [user_id]
                 )
             for (var i in status.rings) {
                 db.query(`
@@ -167,7 +168,7 @@ class DeviceControllers{
             UPDATE modules
             SET id_module = $1,
                 type = $2,
-                value = $3,
+                last_value = $3,
                 time_update = $4
             RETURNING user_id
             `, [
