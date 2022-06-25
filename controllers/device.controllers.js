@@ -74,6 +74,7 @@ class DeviceControllers{
     }
 
     async setStatus(status) {
+        Emitter.on('getInfoFromBD 1', ()=>{clonsole.log('emit from setctatus')})
         try{
             console.log(status)
             const user_id = (await db.query(
@@ -93,7 +94,6 @@ class DeviceControllers{
             status.speaker.volume,
             status.id]
             )).rows[0].user_id
-            console.log('User id: ', user_id)
             const rings_id = (await db.query(`
                 with updated as (
                     UPDATE rings
@@ -107,10 +107,7 @@ class DeviceControllers{
                 [user_id]
                 )).rows
 
-                console.log('Rings id: ', rings_id)
-
-            for (var i in status.rings) {
-                console.log('Получил id ', status.rings[i].id, 'пытаюсь включить ', rings_id[status.rings[i].id].id)
+            for (let i in status.rings) {
                 await db.query(`
                 UPDATE rings 
                 SET active = true,
