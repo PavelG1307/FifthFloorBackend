@@ -169,7 +169,7 @@ class DeviceControllers{
             SET id_module = $1,
                 type = $2,
                 last_value = $3,
-                time_update = $4
+                time = $4
             RETURNING user_id
             `, [
                 id_module,
