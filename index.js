@@ -12,7 +12,8 @@ wsServer.on('connection', onConnect);
 function onConnect(wsClient) {
     console.log("New client");
     Emitter.on('getInfoFromBD 1', async function(){
-        wsClient.send(JSON.stringify(await DeviceControllers.getStatus(user.id)))
+        // wsClient.send(JSON.stringify(await DeviceControllers.getStatus(user.id)))
+        console.log('update Status 1 ws')
     } ())
 
     wsClient.on('message', async function(rawMessage) {
