@@ -11,4 +11,4 @@ class Event_class {
     }
 }
 
-module.exports = new Event_class()
+module.exports = eventEmitter
