@@ -92,7 +92,7 @@ class DeviceControllers{
             status.guard,
             status.speaker.volume,
             status.id]
-            )).rows[0].id
+            )).rows[0]
             console.log(`user id: ${user_id}`)
             const rings_id = await db.query(`
                 UPDATE rings
