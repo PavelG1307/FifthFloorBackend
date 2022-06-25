@@ -13,7 +13,7 @@ class MQTTRouters {
         const status = {id: id}
         status.brightness = parsestatus[1]
         const rings = []
-        for (i in parsestatus[2].split(',')) {
+        for (let i in parsestatus[2].split(',')) {
             const ring = {
                 id: parsestatus[2].split(',')[i],
                 time: parsestatus[3].split(',')[i],
