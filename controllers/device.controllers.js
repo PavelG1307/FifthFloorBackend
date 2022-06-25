@@ -93,16 +93,16 @@ class DeviceControllers{
             status.speaker.volume,
             status.id]
             )).rows[0].user_id
-            console.log(user_id)
+            console.log('User id: ', user_id)
             const rings_id = await db.query(`
                 UPDATE rings
                 SET active = false
                 WHERE user_id = $1
                 RETURNING id`,
                 [user_id]
-                ).rows
+                )
 
-                console.log(rings_id)
+                console.log('Rings id: ', rings_id)
 
             for (var i in status.rings) {
                 await db.query(`
