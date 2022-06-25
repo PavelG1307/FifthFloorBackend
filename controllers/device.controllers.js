@@ -95,11 +95,15 @@ class DeviceControllers{
             )).rows[0].user_id
             console.log('User id: ', user_id)
             const rings_id = (await db.query(`
-                UPDATE rings
-                SET active = false
-                WHERE user_id = $1
-                RETURNING id
-                ORDER BY id`,
+                with updated as (
+                    UPDATE rings
+                    SET active = false
+                    WHERE user_id = $1
+                    RETURNING id
+                )
+                SELECT *
+                FROM updated
+                ORDER BY id ASC;`,
                 [user_id]
                 )).rows
 
@@ -112,7 +116,8 @@ class DeviceControllers{
                     time = $1,
                     sunrise = $2,
                     music = $3
-                WHERE id = $4`,
+                WHERE id = $4
+                `,
                 [status.rings[i].time,
                 status.rings[i].sunrise,
                 status.rings[i].music,
@@ -170,12 +175,12 @@ class DeviceControllers{
 
     async updateModule(id_module, type, value, time_update){
         const user_id = db.query(`
-            UPDATE modules
-            SET id_module = $1,
-                type = $2,
-                last_value = $3,
-                time = $4
-            RETURNING user_id
+                UPDATE modules
+                SET id_module = $1,
+                    type = $2,
+                    last_value = $3,
+                    time = $4
+                RETURNING user_id
             `, [
                 id_module,
                 type,
