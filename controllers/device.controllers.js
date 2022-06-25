@@ -102,7 +102,7 @@ class DeviceControllers{
                 [user_id]
                 )
 
-                console.log(rings_id)
+                console.log(rings_id.toString())
 
             for (var i in status.rings) {
                 await db.query(`
