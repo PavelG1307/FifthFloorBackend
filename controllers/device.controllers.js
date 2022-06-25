@@ -1,5 +1,5 @@
 const db = require('../db')
-const Emitter = require('../emitter.js')
+// const Emitter = require('../emitter.js')
 
 class DeviceControllers{
 

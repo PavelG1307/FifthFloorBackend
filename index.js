@@ -7,6 +7,7 @@ const Emitter = require('./emitter.js')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
 
+DeviceControllers.Emitter = Emitter;
 wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
