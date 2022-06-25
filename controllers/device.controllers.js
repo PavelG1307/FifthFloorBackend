@@ -31,6 +31,9 @@ class DeviceControllers{
         try{
             const station = await db.query(`INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, $1, false, 0, $2, NOW()) RETURNING *`,[id_user, secret_key])
             if (station) {
+                for (let i = 0; i<5; i++){
+                    await db.query(`INSERT INTO rings (name, time, active, visible, sunrise, music, user_id, station_id) VALUES ("ring", 0, false, false, true, 0, $1, $2)`,[id_user, station.id])
+                }
                 return {
                     error: null,
                     message: "SUCCESS"

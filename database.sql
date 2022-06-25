@@ -23,6 +23,8 @@ create TABLE stations(
 create TABLE rings(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
+    active BOOLEAN,
+    visible BOOLEAN,
     time INTEGER,
     sunrise BOOLEAN DEFAULT(true),
     music INTEGER,
