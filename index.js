@@ -6,10 +6,7 @@ const mqtt = require('./mqtt.js')
 const Emitter = require('./emitter.js')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
-
-DeviceControllers.Emitter = Emitter;
-mqtt.Emitter = Emitter;
-
+mqtt.DeviceControllers = DeviceControllers;
 wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
