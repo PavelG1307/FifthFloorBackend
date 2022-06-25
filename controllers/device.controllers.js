@@ -119,7 +119,7 @@ class DeviceControllers{
 
             Emitter.emit('getInfoFromBD 1');
         } catch(e) {
-            consle.log(e)
+            console.log(e)
         }
     }
 
