@@ -8,7 +8,7 @@ class MQTTServer {
   async runMQTT (host = 'localhost', port = '1883', clientId = `Server`) {
     console.log('run')
     const connectUrl = `mqtt://${host}:${port}`
-    const stations_id = ['1232', '23223', '23121']
+    const stations_id = ['1', '23223', '23121']
     const client = mqtt.connect(connectUrl, {
       clientId,
       clean: true,
