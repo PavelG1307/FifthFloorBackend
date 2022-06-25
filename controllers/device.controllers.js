@@ -1,7 +1,5 @@
-const test_data = require('../test_data.js')
 const db = require('../db')
-// const {EventEmitter} = require('events')
-// const eventEmitter = new EventEmitter();
+const Emitter = require('./emitter.js')
 
 class DeviceControllers{
 
@@ -27,7 +25,6 @@ class DeviceControllers{
             return {error: 'Station not found'}
         }
         return station
-        // return test_data
     }
 
     async addStation(id_user, secret_key) {
@@ -115,7 +112,7 @@ class DeviceControllers{
             }
             // ночник
 
-            // eventEmitter.emit('getInfoFromBD 1');
+            Emitter.emit('getInfoFromBD 1');
         } catch(e) {
             consle.log(e)
         }
