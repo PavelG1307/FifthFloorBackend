@@ -76,7 +76,7 @@ class DeviceControllers{
     async setStatus(status) {
         try{
             console.log(status)
-            const {user_id, station_id} = db.query(
+            const {user_id, station_id} = await db.query(
             `UPDATE stations
             SET time = $1,
                 battery = $2,
@@ -93,15 +93,16 @@ class DeviceControllers{
             status.speaker.volume,
             status.id]
             )
-            const rings_id = db.query(`
+            const rings_id = await db.query(`
                 UPDATE rings
                 SET active = false
                 WHERE user_id = $1
                 RETURNING id`,
                 [user_id]
                 )
+
             for (var i in status.rings) {
-                db.query(`
+                await db.query(`
                 UPDATE rings 
                 SET active = true,
                     time = $1,
