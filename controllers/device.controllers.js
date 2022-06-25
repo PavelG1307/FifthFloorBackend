@@ -94,13 +94,14 @@ class DeviceControllers{
             status.id]
             )).rows[0].user_id
             console.log('User id: ', user_id)
-            const rings_id = await db.query(`
+            const rings_id = (await db.query(`
                 UPDATE rings
                 SET active = false
                 WHERE user_id = $1
-                RETURNING id`,
+                RETURNING id
+                ORDER BY id`,
                 [user_id]
-                )
+                )).rows
 
                 console.log('Rings id: ', rings_id)
 
@@ -115,7 +116,7 @@ class DeviceControllers{
                 [status.rings[i].time,
                 status.rings[i].sunrise,
                 status.rings[i].music,
-                rings_id[status.rings[i].id]]
+                rings_id[status.rings[i].id]].id
                 )
             }
             // ночник
