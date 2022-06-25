@@ -74,7 +74,7 @@ class DeviceControllers{
     }
 
     async setStatus(status) {
-        Emitter.on('getInfoFromBD 1', ()=>{clonsole.log('emit from setctatus')})
+        Emitter.on('getInfoFromBD 1', ()=>{console.log('emit from setctatus')})
         try{
             console.log(status)
             const user_id = (await db.query(
