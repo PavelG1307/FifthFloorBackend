@@ -76,7 +76,7 @@ class DeviceControllers{
     async setStatus(status) {
         try{
             console.log(status)
-            const {user_id, station_id} = await db.query(
+            const {user_id, id} = await db.query(
             `UPDATE stations
             SET time = $1,
                 battery = $2,
@@ -85,7 +85,7 @@ class DeviceControllers{
                 guard = $4,
                 speaker = $5
             WHERE id = $6
-            RETURNING user_id, station_id;`,
+            RETURNING user_id, id;`,
             [status.time,
             status.voltage,
             status.brightness,
