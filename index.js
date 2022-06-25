@@ -8,6 +8,8 @@ const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
 
 DeviceControllers.Emitter = Emitter;
+mqtt.Emitter = Emitter;
+
 wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {

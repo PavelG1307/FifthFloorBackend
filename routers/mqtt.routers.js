@@ -1,4 +1,5 @@
 const deviceControllers = require("../controllers/device.controllers.js")
+deviceControllers.Emitter = Emitter;
 
 class MQTTRouters {
 
