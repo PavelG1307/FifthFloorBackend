@@ -122,7 +122,7 @@ class DeviceControllers{
                 [status.rings[i].time,
                 status.rings[i].sunrise,
                 status.rings[i].music,
-                rings_id[status.rings[i].id].id]
+                rings_id[status.rings[i].id].id - 1]
                 )
             }
             // ночник
