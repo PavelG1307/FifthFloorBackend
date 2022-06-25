@@ -110,6 +110,7 @@ class DeviceControllers{
                 console.log('Rings id: ', rings_id)
 
             for (var i in status.rings) {
+                console.log('Получил id ', status.rings[i].id, 'пытаюсь включить ', rings_id[status.rings[i].id].id)
                 await db.query(`
                 UPDATE rings 
                 SET active = true,
@@ -121,7 +122,7 @@ class DeviceControllers{
                 [status.rings[i].time,
                 status.rings[i].sunrise,
                 status.rings[i].music,
-                rings_id[status.rings[i].id]].id
+                rings_id[status.rings[i].id].id]
                 )
             }
             // ночник
