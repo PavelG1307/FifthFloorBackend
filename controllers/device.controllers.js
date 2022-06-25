@@ -101,6 +101,8 @@ class DeviceControllers{
                 [user_id]
                 )
 
+                console.log(rings_id)
+                
             for (var i in status.rings) {
                 await db.query(`
                 UPDATE rings 
