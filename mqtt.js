@@ -1,6 +1,5 @@
 const mqtt = require('mqtt')
 const MQTTRouters = require('./routers/mqtt.routers.js')
-MQTTRouters.DeviceControllers = DeviceControllers
 
 class MQTTServer {
     

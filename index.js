@@ -6,15 +6,14 @@ const mqtt = require('./mqtt.js')
 const Emitter = require('./emitter.js')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
-mqtt.DeviceControllers = DeviceControllers;
 wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
     console.log("New client");
-    Emitter.on('getInfoFromBD 1', async function(){
+    Emitter.on('getInfoFromBD 1', () => {
         // wsClient.send(JSON.stringify(await DeviceControllers.getStatus(user.id)))
         console.log('update Status 1 ws')
-    } ())
+    })
 
     wsClient.on('message', async function(rawMessage) {
         let message = JSON.parse(rawMessage)
