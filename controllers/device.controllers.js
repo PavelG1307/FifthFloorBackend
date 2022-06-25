@@ -76,9 +76,7 @@ class DeviceControllers{
     async setStatus(status) {
         try{
             console.log(status)
-            const user_id = 10
-            console.log(`user id: ${status.id}`)
-            const resp = (await db.query(
+            const user_id = (await db.query(
             `UPDATE stations
             SET time = $1,
                 battery = $2,
@@ -87,15 +85,15 @@ class DeviceControllers{
                 guard = $4,
                 speaker = $5
             WHERE id = $6
-            RETURNING *;`,
+            RETURNING user_id;`,
             [status.time,
             status.voltage,
             status.brightness,
             status.guard,
             status.speaker.volume,
             status.id]
-            ))
-            console.log(resp)
+            )).rows[0].id
+            console.log(`user id: ${user_id}`)
             const rings_id = await db.query(`
                 UPDATE rings
                 SET active = false
