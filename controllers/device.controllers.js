@@ -1,7 +1,7 @@
 const test_data = require('../test_data.js')
 const db = require('../db')
-const {EventEmitter} = require('events')
-const eventEmitter = new EventEmitter();
+// const {EventEmitter} = require('events')
+// const eventEmitter = new EventEmitter();
 
 class DeviceControllers{
 
@@ -115,7 +115,7 @@ class DeviceControllers{
             }
             // ночник
 
-            eventEmitter.emit('getInfoFromBD 1');
+            // eventEmitter.emit('getInfoFromBD 1');
         } catch(e) {
             consle.log(e)
         }

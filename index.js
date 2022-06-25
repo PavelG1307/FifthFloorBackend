@@ -3,18 +3,18 @@ const {checkToken} = require('./authControl.js');
 const UserControllers = require('./controllers/user.controllers.js');
 const DeviceControllers = require('./controllers/device.controllers.js');
 const mqtt = require('./mqtt.js')
-const {EventEmitter} = require('events')
+// const {EventEmitter} = require('events')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
-const eventEmitter = new EventEmitter()
+// const eventEmitter = new EventEmitter()
 
 wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
     console.log("New client");
-    eventEmitter.on('getInfoFromBD 1', async function(){
-        wsClient.send(JSON.stringify(await DeviceControllers.getStatus(user.id)))
-    } ())
+    // eventEmitter.on('getInfoFromBD 1', async function(){
+    //     wsClient.send(JSON.stringify(await DeviceControllers.getStatus(user.id)))
+    // } ())
 
     wsClient.on('message', async function(rawMessage) {
         let message = JSON.parse(rawMessage)
