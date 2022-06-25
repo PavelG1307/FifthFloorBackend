@@ -76,7 +76,7 @@ class DeviceControllers{
     async setStatus(status) {
         try{
             console.log(status)
-            user_id = 10
+            const user_id = 10
             const resp = (await db.query(
             `UPDATE stations
             SET time = $1,
