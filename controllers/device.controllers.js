@@ -1,5 +1,5 @@
 const db = require('../db')
-// const Emitter = require('../emitter.js')
+const emitter = require('../emitter.js')
 
 class DeviceControllers{
 
@@ -74,7 +74,7 @@ class DeviceControllers{
     }
 
     async setStatus(status) {
-        Emitter.on('getInfoFromBD 1', ()=>{console.log('emit from setctatus')})
+        emitter.on('getInfoFromBD 1', ()=>{console.log('emit from setctatus')})
         try{
             console.log(status)
             const user_id = (await db.query(
@@ -124,7 +124,7 @@ class DeviceControllers{
             }
             // ночник
 
-            Emitter.emit('getInfoFromBD 1');
+            emitter.emit('getInfoFromBD 1');
         } catch(e) {
             console.log(e)
         }
