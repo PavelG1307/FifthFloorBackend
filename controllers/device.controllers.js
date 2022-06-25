@@ -77,7 +77,7 @@ class DeviceControllers{
         try{
             console.log(status)
             const user_id = 10
-            console.log(status.id)
+            console.log(`user id: ${status.id}`)
             const resp = (await db.query(
             `UPDATE stations
             SET time = $1,
@@ -87,7 +87,7 @@ class DeviceControllers{
                 guard = $4,
                 speaker = $5
             WHERE id = $6
-            RETURNING user_id, id;`,
+            RETURNING *;`,
             [status.time,
             status.voltage,
             status.brightness,
