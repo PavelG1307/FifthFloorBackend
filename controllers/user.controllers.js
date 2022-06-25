@@ -5,14 +5,19 @@ const jwt = require('../authControl.js')
 class UserController {
 
     async createUser(login, password, email, phone_number) {
-        const hash_password = bcrypt.hashSync(password,7)
-        const role = 'USER'
-        if (await CheckLogin(login)) {
-            const newUser = await db.query(`INSERT INTO users (login,password,role,email,phonenumber) VALUES ($1,$2,$3,$4,$5) RETURNING *`, [login, hash_password, role, email, phone_number])
-            const token = await jwt.generateToken(newUser.id, newUser.login, newUser.role)
-            return {error: null, token: token}
-        } else {
-            return {error: 'Логин уже занят', tokken: null}
+        try{
+            const hash_password = bcrypt.hashSync(password,7)
+            const role = 'USER'
+            if (await CheckLogin(login)) {
+                const newUser = await db.query(`INSERT INTO users (login,password,role,email,phonenumber) VALUES ($1,$2,$3,$4,$5) RETURNING *`, [login, hash_password, role, email, phone_number])
+                const token = await jwt.generateToken(newUser.id, newUser.login, newUser.role)
+                return {error: null, token: token}
+            } else {
+                return {error: 'Логин уже занят', tokken: null}
+            }
+        } catch(e) {
+            console.log(e)
+            return {error: 'Error on server'}
         }
     }
 

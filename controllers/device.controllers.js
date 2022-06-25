@@ -1,5 +1,8 @@
 const test_data = require('../test_data.js')
 const db = require('../db')
+import { EventEmitter } from 'events';
+const eventEmitter = new EventEmitter();
+
 class DeviceControllers{
 
     async getStatus(id_user) {
@@ -112,7 +115,7 @@ class DeviceControllers{
             }
             // ночник
 
-
+            eventEmitter.emit('getInfoFromBD 1');
         } catch(e) {
             consle.log(e)
         }
