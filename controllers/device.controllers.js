@@ -1,6 +1,6 @@
 const test_data = require('../test_data.js')
 const db = require('../db')
-import { EventEmitter } from 'events';
+const {EventEmitter} = require('events')
 const eventEmitter = new EventEmitter();
 
 class DeviceControllers{
