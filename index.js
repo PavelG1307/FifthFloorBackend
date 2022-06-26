@@ -5,18 +5,16 @@ const {deviceControllers} = require('./controllers/device.controllers.js');
 const {mqttServer, emitter} = require('./mqtt.js')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
+
+const WSClients = {}
 wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
     console.log("New client");
-    emitter.eventBus.on('getInfoFromBD 1', async function (){
-        wsClient.send(JSON.stringify(await deviceControllers.getStatus(user.id)))
-        // console.log('update Status 1 ws')
-    })
 
     wsClient.on('message', async function(rawMessage) {
         let message = JSON.parse(rawMessage)
-        res = await answer(message)
+        res = await answer(wsClient, message)
         wsClient.send(JSON.stringify(res))
     })
 
@@ -26,7 +24,7 @@ function onConnect(wsClient) {
 }
 
 
-async function answer(message) {
+async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
@@ -34,6 +32,7 @@ async function answer(message) {
     } else {
         switch (type) {
             case "CONNECTED":
+                WSUsers[user.id] = ws
                 return await deviceControllers.getStatus(user.id)
 
             case "SIGN IN":
@@ -52,6 +51,17 @@ async function answer(message) {
         }
     }
 }
+
+emitter.eventBus.on('Updated status', 
+    async function (id){
+        try {
+            WSClients[id].send(JSON.stringify(await deviceControllers.getStatus(id)))    
+        } catch (e) {
+            WSClients[id].send(JSON.stringify({error: "Error on server"}))
+            console.log(e)
+        }
+    }
+)
 
 wsServer.on('listening', () => {console.log(`Сервер запущен на ${port} порту`)});
 mqttServer.runMQTT()

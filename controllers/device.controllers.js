@@ -124,7 +124,7 @@ class DeviceControllers{
             }
             // ночник
 
-            emitter.eventBus.sendEvent('getInfoFromBD 1','');
+            emitter.eventBus.sendEvent('Updated status',user_id);
         } catch(e) {
             console.log(e)
         }
