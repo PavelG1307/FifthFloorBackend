@@ -1,5 +1,8 @@
-const Emitter = require('./emitter.js')
+const {routerClass, emitter} = require('./test1.js')
+// var emitter = require('./emitter.js')
+// console.log(mod1)
+emitter.eventBus.on('response', function(data) {
+    console.log(data)
+})
 
-Emitter.on('help', (i,j) => {console.log('help' + i + j)})
-
-Emitter.emit('help', 1234, 56)
+setTimeout(()=>{routerClass.test()}, 1500)

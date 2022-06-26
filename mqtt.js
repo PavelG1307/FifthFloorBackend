@@ -1,5 +1,6 @@
 const mqtt = require('mqtt')
-const MQTTRouters = require('./routers/mqtt.routers.js')
+const {MQTTRouter, emitter} = require('./routers/mqtt.routers.js')
+
 
 class MQTTServer {
     
@@ -48,10 +49,10 @@ class MQTTServer {
 
       switch(endpoint) {
           case 'status':
-              await MQTTRouters.ParseStatus(id, payload.toString())
+              await MQTTRouter.ParseStatus(id, payload.toString())
               break
           case 'modules':
-              await MQTTRouters.ParseModuleMessage(id, payload.toString())
+              await MQTTRouter.ParseModuleMessage(id, payload.toString())
               break
       }
     console.log('Received Message:', topic, payload.toString())
@@ -59,4 +60,5 @@ class MQTTServer {
 
 }
 
-module.exports = new MQTTServer()
+mqttServer = new MQTTServer()
+module.exports = {mqttServer, emitter}

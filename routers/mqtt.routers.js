@@ -1,4 +1,4 @@
-const deviceControllers = require("../controllers/device.controllers.js")
+const {deviceControllers, emitter} = require("../controllers/device.controllers.js")
 
 
 class MQTTRouters {
@@ -64,8 +64,8 @@ class MQTTRouters {
         return true
     }
 }
-
-module.exports = new MQTTRouters()
+const MQTTRouter = new MQTTRouters()
+module.exports = {MQTTRouter, emitter}
 
 
 // STT: 5715 0 1,3 835,1000 true,false 1,3 true 2330,730 false 55 720 1 1234 true

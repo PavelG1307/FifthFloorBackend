@@ -1,4 +1,17 @@
-let EventEmitter = require('events').EventEmitter
-let notifier = new EventEmitter()
+var util = require('util')
+var eventEmitter = require('events').EventEmitter
 
-module.exports = notifier
+function Event () {
+    eventEmitter.call(this)
+}
+
+util.inherits(Event, eventEmitter)
+
+Event.prototype.sendEvent = function(type, data) {
+    this.emit(type, data)
+}
+var eventBus = new Event();
+module.exports = {
+ emitter : Event,
+ eventBus : eventBus
+};

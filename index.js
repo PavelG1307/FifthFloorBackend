@@ -2,15 +2,14 @@ const WebSocket = require('ws');
 const {checkToken} = require('./authControl.js');
 const UserControllers = require('./controllers/user.controllers.js');
 const DeviceControllers = require('./controllers/device.controllers.js');
-const mqtt = require('./mqtt.js')
-const Emitter = require('./emitter.js')
+const {mqttServer, emitter} = require('./mqtt.js')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
 wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
     console.log("New client");
-    Emitter.on('getInfoFromBD 1', () => {
+    emitter.eventBus.on('getInfoFromBD 1', () => {
         // wsClient.send(JSON.stringify(await DeviceControllers.getStatus(user.id)))
         console.log('update Status 1 ws')
     })
@@ -19,7 +18,6 @@ function onConnect(wsClient) {
         let message = JSON.parse(rawMessage)
         res = await answer(message)
         wsClient.send(JSON.stringify(res))
-        
     })
 
     wsClient.on('close', function() {
@@ -56,4 +54,4 @@ async function answer(message) {
 }
 
 wsServer.on('listening', () => {console.log(`Сервер запущен на ${port} порту`)});
-mqtt.runMQTT()
+mqttServer.runMQTT()

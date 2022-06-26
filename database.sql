@@ -50,3 +50,6 @@ create TABLE modules(
 );
 
 INSERT INTO stations (time, battery, brightness, user_id, guard, speaker, secret_key) VALUES ('09:09', '...', 0, 70, false, 0, 'jkhjk') RETURNING *
+
+
+UPDATE rings SET active=true, time=1, sunrise = false, music = 3 WHERE id = 2;

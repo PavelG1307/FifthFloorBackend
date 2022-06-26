@@ -124,7 +124,7 @@ class DeviceControllers{
             }
             // ночник
 
-            emitter.emit('getInfoFromBD 1');
+            emitter.eventBus.sendEvent('getInfoFromBD 1','');
         } catch(e) {
             console.log(e)
         }
@@ -197,5 +197,5 @@ class DeviceControllers{
         }
     }
 }
-
-module.exports = new DeviceControllers()
+const deviceControllers = new DeviceControllers()
+module.exports = {deviceControllers, emitter}
