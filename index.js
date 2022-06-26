@@ -10,7 +10,7 @@ wsServer.on('connection', onConnect);
 function onConnect(wsClient) {
     console.log("New client");
     emitter.eventBus.on('getInfoFromBD 1', () => {
-        wsClient.send(JSON.stringify(await deviceControllers.getStatus(user.id)))
+        // wsClient.send(JSON.stringify(await deviceControllers.getStatus(user.id)))
         console.log('update Status 1 ws')
     })
 
