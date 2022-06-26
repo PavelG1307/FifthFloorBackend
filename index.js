@@ -32,7 +32,7 @@ async function answer(ws, message) {
     } else {
         switch (type) {
             case "CONNECTED":
-                WSUsers[user.id] = ws
+                WSClients[user.id] = ws
                 return await deviceControllers.getStatus(user.id)
 
             case "SIGN IN":
