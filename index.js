@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const {checkToken} = require('./authControl.js');
 const UserControllers = require('./controllers/user.controllers.js');
-const DeviceControllers = require('./controllers/device.controllers.js');
+const {deviceControllers} = require('./controllers/device.controllers.js');
 const {mqttServer, emitter} = require('./mqtt.js')
 const port = 8080;
 const wsServer = new WebSocket.Server({port: port});
@@ -10,7 +10,7 @@ wsServer.on('connection', onConnect);
 function onConnect(wsClient) {
     console.log("New client");
     emitter.eventBus.on('getInfoFromBD 1', () => {
-        // wsClient.send(JSON.stringify(await DeviceControllers.getStatus(user.id)))
+        wsClient.send(JSON.stringify(await deviceControllers.getStatus(user.id)))
         console.log('update Status 1 ws')
     })
 
@@ -34,7 +34,7 @@ async function answer(message) {
     } else {
         switch (type) {
             case "CONNECTED":
-                return await DeviceControllers.getStatus(user.id)
+                return await deviceControllers.getStatus(user.id)
 
             case "SIGN IN":
                 return await UserControllers.getUser(message.login, message.password)
@@ -43,10 +43,10 @@ async function answer(message) {
                 return await UserControllers.createUser(message.login, message.password, message.email, message.phone_number)
             
             case "GET STATUS":
-                return await DeviceControllers.getStatus(user.id)
+                return await deviceControllers.getStatus(user.id)
             
             case "ADD STATION":
-                return await DeviceControllers.addStation(user.id, message.key)
+                return await deviceControllers.addStation(user.id, message.key)
             default:
                 return {error: "Bad request"}
         }
