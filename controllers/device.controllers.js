@@ -28,6 +28,7 @@ class DeviceControllers{
     }
 
     async addStation(id_user, secret_key) {
+        console.log(`New stations: ${id_user}`)
         try{
             const station = await db.query(`INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, $1, false, 0, $2, NOW()) RETURNING *`,[id_user, secret_key])
             console.log(station)
@@ -187,6 +188,7 @@ class DeviceControllers{
             ]
         )
         console.log(user_id)
+        emitter.eventBus.sendEvent('Updated status',user_id);
 
     }
 
