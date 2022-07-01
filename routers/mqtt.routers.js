@@ -39,7 +39,7 @@ class MQTTRouters {
         deviceControllers.setStatus(status)
         }
 
-    async ParseModuleMessage(id, status_message){
+    async ParseModuleMessage(id_station, status_message){
         const parsemessage = status_message.split(' ')
         const key_stations = parsemessage[0]
         if (!(await this.check_key(key_stations))) {
@@ -56,7 +56,7 @@ class MQTTRouters {
                 time_update: parsemessage[i * 4 + 4]
             })
         }
-        await deviceControllers.updateModules(id, modules)
+        await deviceControllers.updateModules(id_station, modules)
     }
 
     async check_key(key_stations) {

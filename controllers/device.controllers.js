@@ -172,7 +172,7 @@ class DeviceControllers{
         }
     }
 
-    async updateModule(id_module, type, value, time_update, user_id){
+    async updateModule(id_module, type, value, time_update, station_id){
         console.log(`id: ${id_module}, type: ${type}, value: ${value}, update: ${time_update}`)
         const id = await db.query(`
                 INSERT INTO modules (
@@ -182,7 +182,7 @@ class DeviceControllers{
                     time,
                     location,
                     name,
-                    user_id)
+                    station_id)
                 VALUES 
                     ($1,
                     $2,
@@ -196,12 +196,12 @@ class DeviceControllers{
                     type = $2,
                     last_value = $3,
                     time = NOW()
-                RETURNING user_id
+                RETURNING station_id
             `, [
                 id_module,
                 type,
                 value,
-                user_id
+                station_id
             ]
         )
         console.log(id)
