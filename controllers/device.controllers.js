@@ -184,8 +184,7 @@ class DeviceControllers{
             `, [
                 id_module,
                 type,
-                value,
-                time_update
+                value
             ]
         )
         console.log(user_id)
