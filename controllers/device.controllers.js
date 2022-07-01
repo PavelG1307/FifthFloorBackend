@@ -172,14 +172,20 @@ class DeviceControllers{
         }
     }
 
-    async updateModule(id_module, type, value, time_update){
+    async updateModule(id_module, type, value, time_update, user_id){
         console.log(`id: ${id_module}, type: ${type}, value: ${value}, update: ${time_update}`)
-        const user_id = await db.query(`
+        const id = await db.query(`
                 INSERT INTO modules (
                     id_module,
                     type,
                     last_value,
-                    time)
+                    time,
+                    location,
+                    name,
+                    user_id,
+                    NOW(),
+                    room,
+                    $4)
                 VALUES 
                     ($1,$2,$3)
                 ON CONFLICT (id) DO UPDATE
@@ -191,18 +197,20 @@ class DeviceControllers{
             `, [
                 id_module,
                 type,
-                value
+                value,
+                user_id
             ]
         )
-        console.log(user_id)
+        console.log(id)
         // emitter.eventBus.sendEvent('Updated status',user_id);
 
     }
 
-    async updateModules(status_message){
+    async updateModules(user_id, status_message){
         console.log(status_message)
         for (let i in status_message) {
-            await this.updateModule(status_message[i].id, status_message[i].type, status_message[i].value, status_message[i].time_update)
+            const {id, type, value, time_update} = status_message[i]
+            await this.updateModule(id, type, value, time_update, user_id)
         }
     }
 }

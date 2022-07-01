@@ -37,8 +37,7 @@ class MQTTRouters {
         status.time = parsestatus[12]
         status.guard = (parsestatus[13] === 'true')
         deviceControllers.setStatus(status)
-        // console.log(`Яркость: ${brightness}\nБудильники: ${JSON.stringify(rings)}\nНочник: ${JSON.stringify(nightlight)}\nКолонка: ${JSON.stringify(speaker)}\nНапряжение: ${voltage}\nВремя: ${time}`)
-    }
+        }
 
     async ParseModuleMessage(id, status_message){
         const parsemessage = status_message.split(' ')
@@ -57,7 +56,7 @@ class MQTTRouters {
                 time_update: parsemessage[i * 4 + 4]
             })
         }
-        await deviceControllers.updateModules(modules)
+        await deviceControllers.updateModules(id, modules)
     }
 
     async check_key(key_stations) {
