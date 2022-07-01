@@ -191,7 +191,7 @@ class DeviceControllers{
                     'room',
                     'modules',
                     $4)
-                ON CONFLICT (id) DO UPDATE
+                ON CONFLICT () DO UPDATE
                 SET id_module = $1,
                     type = $2,
                     last_value = $3,
