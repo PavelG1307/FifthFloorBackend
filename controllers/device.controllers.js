@@ -173,7 +173,7 @@ class DeviceControllers{
     }
 
     async updateModule(id_module, type, value, time_update){
-        console.log(`id: ${id_module}, type: ${type}, value: ${value}, update: ${time}`)
+        console.log(`id: ${id_module}, type: ${type}, value: ${value}, update: ${time_update}`)
         const user_id = db.query(`
                 UPDATE modules
                 SET id_module = $1,
