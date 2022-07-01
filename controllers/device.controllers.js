@@ -182,12 +182,14 @@ class DeviceControllers{
                     time,
                     location,
                     name,
-                    user_id,
-                    NOW(),
-                    room,
-                    $4)
+                    user_id)
                 VALUES 
-                    ($1,$2,$3)
+                    ($1,
+                    $2,
+                    $3,
+                    NOW(),
+                    "room",
+                    $4)
                 ON CONFLICT (id) DO UPDATE
                 SET id_module = $1,
                     type = $2,
