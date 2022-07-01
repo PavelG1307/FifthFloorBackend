@@ -178,7 +178,7 @@ class DeviceControllers{
                 SET id_module = $1,
                     type = $2,
                     last_value = $3,
-                    time = $4
+                    time = NOW()
                 RETURNING user_id
             `, [
                 id_module,
