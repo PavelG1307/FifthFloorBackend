@@ -188,7 +188,7 @@ class DeviceControllers{
             ]
         )
         console.log(user_id)
-        emitter.eventBus.sendEvent('Updated status',user_id);
+        // emitter.eventBus.sendEvent('Updated status',user_id);
 
     }
 
