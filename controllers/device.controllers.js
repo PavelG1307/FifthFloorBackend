@@ -188,7 +188,7 @@ class DeviceControllers{
                     $2,
                     $3,
                     NOW(),
-                    "room",
+                    'room',
                     $4)
                 ON CONFLICT (id) DO UPDATE
                 SET id_module = $1,
