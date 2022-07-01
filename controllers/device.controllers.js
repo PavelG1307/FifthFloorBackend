@@ -175,7 +175,14 @@ class DeviceControllers{
     async updateModule(id_module, type, value, time_update){
         console.log(`id: ${id_module}, type: ${type}, value: ${value}, update: ${time_update}`)
         const user_id = await db.query(`
-                UPDATE modules
+                INSERT INTO modules (
+                    id_module,
+                    type,
+                    last_value,
+                    time)
+                VALUES 
+                    ($1,$2,$3)
+                ON CONFLICT (id) DO UPDATE
                 SET id_module = $1,
                     type = $2,
                     last_value = $3,

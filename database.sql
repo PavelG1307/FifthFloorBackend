@@ -42,7 +42,7 @@ create TABLE modules(
     time TIMESTAMP,
     station_id INTEGER,
     user_id INTEGER,
-    id_module INTEGER,
+    id_module INTEGER UNIQUE,
     type INTEGER,
     UNIQUE (id_module),
     FOREIGN KEY (user_id) REFERENCES users (id),
