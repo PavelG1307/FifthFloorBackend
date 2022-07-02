@@ -46,6 +46,8 @@ async function answer(ws, message) {
             
             case "ADD STATION":
                 return await deviceControllers.addStation(user.id, message.key)
+            case "SET BRIGHTNESS":
+                return await deviceControllers.setBrightness(user_id, message.brightness)
             default:
                 return {error: "Bad request"}
         }
