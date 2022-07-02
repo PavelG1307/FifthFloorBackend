@@ -203,7 +203,7 @@ class DeviceControllers{
                     id_module,
                     type,
                     value,
-                    station_id
+                    Number(station_id)
                 ]
             )
             console.log(id)
