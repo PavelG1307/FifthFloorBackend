@@ -3,6 +3,8 @@ const emitter = require('../emitter.js')
 
 class DeviceControllers{
 
+    default_bright = 7
+
     async getStatus(id_user) {
         const station = (await db.query("SELECT * FROM stations WHERE user_id = $1", [id_user])).rows[0]
         if (station){
@@ -66,8 +68,9 @@ class DeviceControllers{
     async setBrightness(id_user, brightness) {
         
         const station_id = await this.getStationIdFromUserId(id_user)
-        console.log(`Set brightness: ${brightness} to id: ${station_id}`)
-        emitter.eventBus.sendEvent('Updated brightness', station_id, brightness);
+        const bright_value = brightness? default_bright : 0
+        console.log(`Set brightness: ${bright_value} to id: ${station_id}`)
+        emitter.eventBus.sendEvent('Updated brightness', station_id, bright_value);
         return {error: null}
     }
 
