@@ -230,7 +230,7 @@ class DeviceControllers{
     }
 
     async getUserIdFromStationId(id){
-        return await db.query(`SELECT user_id FROM stations WHERE id = $1`,[id]).rows.user_id
+        return await db.query(`SELECT user_id FROM stations WHERE id = $1`,[id]).rows
     }
 }
 const deviceControllers = new DeviceControllers()
