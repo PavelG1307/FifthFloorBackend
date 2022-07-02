@@ -68,6 +68,9 @@ class DeviceControllers{
 
     async setBrightness(id_user, brightness) {
         console.log(`Set brightness: ${brightness} to id: ${id_user}`)
+        const station_id = await this.getStationIdFromUserId(id_user)
+        emitter.eventBus.sendEvent('Updated brightness', station_id, brightness);
+        return {error: null}
     }
 
 
@@ -227,6 +230,10 @@ class DeviceControllers{
 
     async getUserIdFromStationId(id){
         return (await db.query(`SELECT user_id FROM stations WHERE id = $1`,[id])).rows[0].user_id
+    }
+
+    async getStationIdFromUserId(id){
+        return (await db.query(`SELECT id FROM stations WHERE user_id = $1`,[id])).rows[0].user_id
     }
 }
 const deviceControllers = new DeviceControllers()
