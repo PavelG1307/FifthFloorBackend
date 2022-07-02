@@ -49,7 +49,7 @@ class MQTTServer {
 
       switch(endpoint) {
           case 'status':
-              await MQTTRouter.ParseStatus(id, payload.toString())
+              await MQTTRouter.ParseStatus(Number(id), payload.toString())
               break
           case 'modules':
               await MQTTRouter.ParseModuleMessage(id, payload.toString())
