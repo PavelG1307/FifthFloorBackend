@@ -214,18 +214,18 @@ class DeviceControllers{
     }
 
     async updateModules(station_id, status_message){
-        console.log(status_message)
+        console.log(status_message, station_id)
         for (let i in status_message) {
             const {id, type, value, time_update} = status_message[i]
             await this.updateModule(id, type, value, time_update, station_id)
         }
-        try{
-            console.log(station_id)
-            const user_id = await this.getUserIdFromStationId(station_id)
-            console.log("user id", user_id)
-        } catch(e){
-            console.log(e)
-        }
+        // try{
+        //     console.log(station_id)
+        //     const user_id = await this.getUserIdFromStationId(station_id)
+        //     console.log("user id", user_id)
+        // } catch(e){
+        //     console.log(e)
+        // }
     }
 
     async getUserIdFromStationId(id){
