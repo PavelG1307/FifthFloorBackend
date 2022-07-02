@@ -203,11 +203,9 @@ class DeviceControllers{
                     id_module,
                     type,
                     value,
-                    Number(station_id)
+                    station_id
                 ]
             )
-            console.log(id)
-            return id.rows[0].station_id
         } catch(e) {
             console.log(e)
         }
