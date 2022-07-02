@@ -175,7 +175,6 @@ class DeviceControllers{
     }
 
     async updateModule(id_module, type, value, time_update, station_id){
-        console.log(station_id)
         try{
             const id = await db.query(`
                     INSERT INTO modules (
@@ -218,13 +217,12 @@ class DeviceControllers{
             const {id, type, value, time_update} = status_message[i]
             await this.updateModule(id, type, value, time_update, station_id)
         }
-        // try{
-        //     console.log(station_id)
-        //     const user_id = await this.getUserIdFromStationId(station_id)
-        //     console.log("user id", user_id)
-        // } catch(e){
-        //     console.log(e)
-        // }
+        try{
+            const user_id = await this.getUserIdFromStationId(station_id)
+            console.log("user id", user_id)
+        } catch(e){
+            console.log(e)
+        }
     }
 
     async getUserIdFromStationId(id){
