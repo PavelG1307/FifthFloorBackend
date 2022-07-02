@@ -7,8 +7,8 @@ function Event () {
 
 util.inherits(Event, eventEmitter)
 
-Event.prototype.sendEvent = function(type, data) {
-    this.emit(type, data)
+Event.prototype.sendEvent = function(type, ...data) {
+    this.emit(type, ...data)
 }
 var eventBus = new Event();
 module.exports = {
