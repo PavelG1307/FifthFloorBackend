@@ -217,11 +217,11 @@ class DeviceControllers{
         console.log(status_message)
         for (let i in status_message) {
             const {id, type, value, time_update} = status_message[i]
-            await this.updateModule(id, type, value, time_update, user_id)
+            await this.updateModule(id, type, value, time_update, station_id)
         }
         try{
-            const user_id = await (await this.getUserIdFromStationId(station_id))
-            console.log("user id",user_id)
+            const user_id = await this.getUserIdFromStationId(station_id)
+            console.log("user id", user_id)
         } catch(e){
             console.log(e)
         }
