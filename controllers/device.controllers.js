@@ -198,7 +198,6 @@ class DeviceControllers{
                         type = $2,
                         last_value = $3,
                         time = NOW()
-                    RETURNING station_id
                 `, [
                     id_module,
                     type,
@@ -214,12 +213,12 @@ class DeviceControllers{
 
     }
 
-    async updateModules(user_id, status_message){
+    async updateModules(station_id, status_message){
         console.log(status_message)
         let station_id
         for (let i in status_message) {
             const {id, type, value, time_update} = status_message[i]
-            station_id = await this.updateModule(id, type, value, time_update, user_id)
+            await this.updateModule(id, type, value, time_update, user_id)
         }
         try{
             user_id = await (await this.getUserIdFromStationId(station_id))
