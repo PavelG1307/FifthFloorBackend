@@ -231,7 +231,7 @@ class DeviceControllers{
     }
 
     async getStationIdFromUserId(id){
-        return (await db.query(`SELECT id FROM stations WHERE user_id = $1`,[id])).rows[0].user_id
+        return (await db.query(`SELECT id FROM stations WHERE user_id = $1`,[id])).rows[0].id
     }
 }
 const deviceControllers = new DeviceControllers()
