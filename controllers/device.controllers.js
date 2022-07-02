@@ -67,7 +67,7 @@ class DeviceControllers{
 
 
     async setBrightness(id_user, brightness) {
-        console.log(`Set brightness: ${brightness} to id: ${user_id}`)
+        console.log(`Set brightness: ${brightness} to id: ${id_user}`)
     }
 
 
