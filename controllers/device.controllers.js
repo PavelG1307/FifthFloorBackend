@@ -16,11 +16,8 @@ class DeviceControllers{
             } else {
                 station.active = false
             }
+            station.type = "status"
             console.log(station)
-            // await this.addModule(id_user, id, 123123, 1, 1284, '52%', 'Кухня', 'Влажность')
-            // await this.addModule(id_user, id, 435345, 1, 1284, '24°C', 'Комната', 'Температура')
-            // await this.addModule(id_user, id, 234234, 2, 1284, '', 'Прихожая', 'Движение')
-            // await this.addModule(id_user, id, 456456, 3, 1284, '', 'Улица', 'Дверь')
         } else {
             return {error: 'Station not found'}
         }
@@ -69,7 +66,7 @@ class DeviceControllers{
     async setBrightness(id_user, brightness) {
         console.log(`Set brightness: ${brightness} to id: ${id_user}`)
         const station_id = await this.getStationIdFromUserId(id_user)
-        emitter.eventBus.sendEvent('Updated brightness', station_id, brightness);
+        // emitter.eventBus.sendEvent('Updated brightness', station_id, brightness);
         return {error: null}
     }
 
