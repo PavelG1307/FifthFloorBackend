@@ -219,7 +219,7 @@ class DeviceControllers{
         }
         try{
             const user_id = await this.getUserIdFromStationId(station_id)
-            console.log("user id", user_id)
+            emitter.eventBus.sendEvent('Updated status',user_id);
         } catch(e){
             console.log(e)
         }
