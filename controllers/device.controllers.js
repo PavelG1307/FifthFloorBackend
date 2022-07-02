@@ -64,8 +64,9 @@ class DeviceControllers{
 
 
     async setBrightness(id_user, brightness) {
-        console.log(`Set brightness: ${brightness} to id: ${id_user}`)
+        
         const station_id = await this.getStationIdFromUserId(id_user)
+        console.log(`Set brightness: ${brightness} to id: ${station_id}`)
         // emitter.eventBus.sendEvent('Updated brightness', station_id, brightness);
         return {error: null}
     }
