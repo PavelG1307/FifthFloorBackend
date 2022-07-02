@@ -42,7 +42,7 @@ class MQTTServer {
 
     emitter.eventBus.on('Updated brightness', 
         async function (id, brightness){
-          
+              console.log(`Set brightness: ${brightness} to id: ${id}`)
               client.publish(`${id}/brightness`, `BRT ${brightness.toString()}`, { qos: 0, retain: false }, (error) => {
                     if (error) {console.log(error)}
               })
