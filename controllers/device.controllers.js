@@ -221,7 +221,7 @@ class DeviceControllers{
             const station_id = await this.updateModule(id, type, value, time_update, user_id)
         }
         try{
-            user_id = await getUserIdFromStationId(id)
+            user_id = await this.getUserIdFromStationId(id)
             console.log(`user id = ${user_id}`)
         } catch(e){
             console.log(e)
