@@ -222,7 +222,7 @@ class DeviceControllers{
             station_id = await this.updateModule(id, type, value, time_update, user_id)
         }
         try{
-            user_id = await this.getUserIdFromStationId(station_id)
+            user_id = await (await this.getUserIdFromStationId(station_id))
             console.log("user id",user_id)
         } catch(e){
             console.log(e)
@@ -230,7 +230,7 @@ class DeviceControllers{
     }
 
     async getUserIdFromStationId(id){
-        return await db.query(`SELECT user_id FROM stations WHERE id = $1`,[id])
+        return await db.query(`SELECT user_id FROM stations WHERE id = $1`,[id]).rows[0]
     }
 }
 const deviceControllers = new DeviceControllers()
