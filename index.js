@@ -30,6 +30,7 @@ async function answer(ws, message) {
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         return {error: "Token invalid"}
     } else {
+        console.log(type)
         switch (type) {
             case "CONNECTED":
                 WSClients[user.id] = ws
