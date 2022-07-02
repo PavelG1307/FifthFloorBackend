@@ -41,11 +41,11 @@ class MQTTServer {
     client.on('message', await this.onMessage)
 
     emitter.eventBus.on('Updated brightness', 
-    async function (id, brightness){
-          client.publish(`${id}/brightness`, `BRT ${brightness}`, { qos: 0, retain: false }, (error) => {
-                if (error) {console.log(error)}
-          })
-    }
+        async function (id, brightness){
+              client.publish(`${id}/brightness`, `BRT ${brightness}`, { qos: 0, retain: false }, (error) => {
+                    if (error) {console.log(error)}
+              })
+        })
   }
 
 
