@@ -223,7 +223,7 @@ class DeviceControllers{
         }
         try{
             user_id = await this.getUserIdFromStationId(station_id)
-            console.log(`user id = ${user_id}`)
+            console.log(`user id = ${user_id.toString()}`)
         } catch(e){
             console.log(e)
         }
