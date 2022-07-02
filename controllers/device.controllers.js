@@ -67,7 +67,6 @@ class DeviceControllers{
         const default_bright = 7
         const station_id = await this.getStationIdFromUserId(id_user)
         const bright_value = brightness? default_bright : 0
-        console.log(`Set brightness: ${bright_value} to id: ${station_id}`)
         emitter.eventBus.sendEvent('Updated brightness', station_id, bright_value);
         return {error: null}
     }
