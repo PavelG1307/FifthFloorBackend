@@ -67,7 +67,7 @@ class DeviceControllers{
         
         const station_id = await this.getStationIdFromUserId(id_user)
         console.log(`Set brightness: ${brightness} to id: ${station_id}`)
-        // emitter.eventBus.sendEvent('Updated brightness', station_id, brightness);
+        emitter.eventBus.sendEvent('Updated brightness', station_id, brightness);
         return {error: null}
     }
 
@@ -149,6 +149,7 @@ class DeviceControllers{
         return {}
     }
 
+
     async addModule(user_id, station_id, id_module, type, time, value, location, name_module) {
         try{
             module = await db.query(
@@ -163,7 +164,6 @@ class DeviceControllers{
         }
     }
 
-    
 
     async deleteModule(id_module) {
         try{
@@ -174,6 +174,7 @@ class DeviceControllers{
             return {error: 'Server Error'}
         }
     }
+
 
     async updateModule(id_module, type, value, time_update, station_id){
         try{
@@ -211,6 +212,7 @@ class DeviceControllers{
         }
 
     }
+
 
     async updateModules(station_id, status_message){
         console.log(status_message, station_id)
