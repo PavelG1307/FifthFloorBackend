@@ -50,7 +50,6 @@ class DeviceControllers{
     }
 
 
-
     async getRings(id_user, id_station) {
         let rings
         if (id_station) {
@@ -66,16 +65,18 @@ class DeviceControllers{
         return {}
     }
 
+
     async setBrightness(id_user) {
 
     }
+
 
     async setRing() {
 
     }
 
+
     async setStatus(status) {
-        // emitter.on('getInfoFromBD 1', ()=>{console.log('emit from setctatus')})
         try{
             console.log(status)
             const user_id = (await db.query(
@@ -131,6 +132,7 @@ class DeviceControllers{
         }
     }
 
+
     async getModules(id_station) {
         const modules = (await db.query(`SELECT * FROM modules WHERE station_id = $1`, [id_station])).rows
         if (modules) {
@@ -173,39 +175,42 @@ class DeviceControllers{
     }
 
     async updateModule(id_module, type, value, time_update, station_id){
-        console.log(`id: ${id_module}, type: ${type}, value: ${value}, update: ${time_update}`)
-        const id = await db.query(`
-                INSERT INTO modules (
+        try{
+            const id = await db.query(`
+                    INSERT INTO modules (
+                        id_module,
+                        type,
+                        last_value,
+                        time,
+                        location,
+                        name,
+                        station_id)
+                    VALUES 
+                        ($1,
+                        $2,
+                        $3,
+                        NOW(),
+                        'room',
+                        'modules',
+                        $4)
+                    ON CONFLICT (id_module) DO UPDATE
+                    SET id_module = $1,
+                        type = $2,
+                        last_value = $3,
+                        time = NOW()
+                    RETURNING station_id
+                `, [
                     id_module,
                     type,
-                    last_value,
-                    time,
-                    location,
-                    name,
-                    station_id)
-                VALUES 
-                    ($1,
-                    $2,
-                    $3,
-                    NOW(),
-                    'room',
-                    'modules',
-                    $4)
-                ON CONFLICT (id_module) DO UPDATE
-                SET id_module = $1,
-                    type = $2,
-                    last_value = $3,
-                    time = NOW()
-                RETURNING station_id
-            `, [
-                id_module,
-                type,
-                value,
-                station_id
-            ]
-        )
-        console.log(id)
-        // emitter.eventBus.sendEvent('Updated status',user_id);
+                    value,
+                    station_id
+                ]
+            )
+            console.log(id)
+            return id.rows[0].station_id
+        } catch(e) {
+            console.log(e)
+        }
 
     }
 
@@ -213,8 +218,18 @@ class DeviceControllers{
         console.log(status_message)
         for (let i in status_message) {
             const {id, type, value, time_update} = status_message[i]
-            await this.updateModule(id, type, value, time_update, user_id)
+            const station_id = await this.updateModule(id, type, value, time_update, user_id)
         }
+        try{
+            user_id = await getUserIdFromStationId(id)
+            console.log(`user id = ${user_id}`)
+        } catch(e){
+            console.log(e)
+        }
+    }
+
+    async getUserIdFromStationId(id){
+        return await db.query(`SELECT user_id FROM stations WHERE id = $1`,[id])
     }
 }
 const deviceControllers = new DeviceControllers()
