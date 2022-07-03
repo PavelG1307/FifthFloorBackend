@@ -86,7 +86,7 @@ async function answer(ws, message) {
                 break
 
             case "SET MODULE":
-                data = await deviceControllers.setModule(user.id, message.state)
+                data = await deviceControllers.setModule(user.id, message.module, message.state)
                 break
 
             default:

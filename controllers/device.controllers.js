@@ -70,6 +70,7 @@ class DeviceControllers{
     async setSpeaker(id_user, volume){
         const station_id = await this.getStationIdFromUserId(id_user)
         emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `SPQ ${volume}`);
+        return {error: null}
     }
 
     async setRing() {
@@ -77,9 +78,10 @@ class DeviceControllers{
     }
     
 
-    async setModule(id_user, state){
+    async setModule(id_user, id_module, state){
         const station_id = await this.getStationIdFromUserId(id_user)
-        emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `MDL ${state}`);
+        emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `MDL ${id_module} ${state}`);
+        return {error: null}
     }
 
 
