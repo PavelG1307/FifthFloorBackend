@@ -89,7 +89,9 @@ async function answer(ws, message) {
                 data = await deviceControllers.setModule(user.id, message.module, message.state)
                 break
             case "UPDATE MODULE":
-                data = await deviceControllers.updateModuleName(id = message.module, name = message.name, location = message.location)
+                data = await deviceControllers.updateModuleName(message.module, message.name, message.location)
+            case "DELETE MODULE":
+                data = await deviceControllers.deleteModule(message.module)
             default:
                 data = {error: "Bad request"}
                 break
