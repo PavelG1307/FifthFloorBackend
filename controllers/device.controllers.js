@@ -198,37 +198,45 @@ class DeviceControllers{
     }
 
 
-    async updateModule(id_module, type, value, time_update, station_id){
+    async updateModule(id_module, type, value, time_update, station_id, name = "", location = ""){
         try{
-            const id = await db.query(`
-                    INSERT INTO modules (
+            if (value) {
+                const id = await db.query(`
+                        INSERT INTO modules (
+                            id_module,
+                            type,
+                            last_value,
+                            time,
+                            location,
+                            name,
+                            station_id)
+                        VALUES 
+                            ($1,
+                            $2,
+                            $3,
+                            NOW(),
+                            'room',
+                            'modules',
+                            $4)
+                        ON CONFLICT (id_module) DO UPDATE
+                        SET id_module = $1,
+                            type = $2,
+                            last_value = $3,
+                            time = NOW()
+                    `, [
                         id_module,
                         type,
-                        last_value,
-                        time,
-                        location,
-                        name,
-                        station_id)
-                    VALUES 
-                        ($1,
-                        $2,
-                        $3,
-                        NOW(),
-                        'room',
-                        'modules',
-                        $4)
-                    ON CONFLICT (id_module) DO UPDATE
-                    SET id_module = $1,
-                        type = $2,
-                        last_value = $3,
-                        time = NOW()
-                `, [
-                    id_module,
-                    type,
-                    value,
-                    station_id
-                ]
-            )
+                        value,
+                        station_id
+                    ]
+                )
+            } else {
+                console.log(db.query(`
+                UPDATE SET id_module = $1,
+                    name = $2,
+                    location = $3`,
+                [id_module, name, location]))
+            }
         } catch(e) {
             console.log(e)
         }
@@ -240,7 +248,7 @@ class DeviceControllers{
         console.log(status_message, station_id)
         for (let i in status_message) {
             const {id, type, value, time_update} = status_message[i]
-            await this.updateModule(id, type, value, time_update, station_id)
+            await this.updateModule(id_module = id, type = type, value = value, time_update = time_update, station_id = station_id)
         }
         try{
             const user_id = await this.getUserIdFromStationId(station_id)
