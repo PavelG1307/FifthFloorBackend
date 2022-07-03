@@ -231,6 +231,7 @@ class DeviceControllers{
                     ]
                 )
             } else {
+                console.log('update_name')
                 console.log(db.query(`
                 UPDATE modules SET
                     name = $2,
