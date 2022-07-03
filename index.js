@@ -63,10 +63,9 @@ emitter.eventBus.on('Updated status',
     async function (id){
         try {
             if (WSClients[user.id]) {
-            // const data = JSON.stringify(await deviceControllers.getStatus(id))
+            const data = JSON.stringify(await deviceControllers.getStatus(id))
             WSClients[id].forEach((ws) => {
-                console.log(ws)
-            //     send(data)
+                ws.send(data)
             })
             }
         } catch (e) {
