@@ -11,10 +11,16 @@ wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
     console.log("New client");
+    
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
-        const res = await answer(wsClient, message)
-        wsClient.send(JSON.stringify(res))
+        const answer = await answer(wsClient, message)
+
+        if (!wsClient.id) {
+            wsClient.id = answer.id
+        }
+
+        wsClient.send(JSON.stringify(answer.data))
     })
 
     wsClient.on('close', function() {
