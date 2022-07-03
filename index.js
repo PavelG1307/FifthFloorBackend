@@ -15,7 +15,6 @@ function onConnect(wsClient) {
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
         const result = await answer(wsClient, message)
-        console.log(result)
         if (data.id) {
             console.log('ID: ', data.id)
             wsClient.id = result.id
@@ -43,11 +42,11 @@ async function answer(ws, message) {
     } else {
         switch (type) {
             case "CONNECTED":
-                // if (WSClients[user.id]) {
-                //     WSClients[ws.id].push(ws)
-                // } else {
-                //     WSClients[ws.id] = [ws]
-                // }
+                if (WSClients[user.id]) {
+                    WSClients[ws.id].push(ws)
+                } else {
+                    WSClients[ws.id] = [ws]
+                }
                 answer.data = await deviceControllers.getStatus(user.id)
                 answer.id = user.id
                 return answer
