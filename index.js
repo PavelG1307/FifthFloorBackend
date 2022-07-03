@@ -15,13 +15,12 @@ function onConnect(wsClient) {
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
         const {id, data} = await answer(wsClient, message)
-        console.log(id, data)
-        // if (id!=-1) {
-        //     console.log('ID: ', id)
-        //     wsClient.id = id
-        // }
+        if (id) {
+            console.log('ID: ', id)
+            wsClient.id = id
+        }
 
-        // wsClient.send(JSON.stringify(data))
+        wsClient.send(JSON.stringify(data))
     })
 
     wsClient.on('close', function(ws) {
@@ -42,12 +41,13 @@ async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
     let data
-    const id = user.id
+    let id = null
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         data = {error: "Token invalid"}
     } else {
         switch (type) {
             case "CONNECTED":
+                id = user.id
                 if (WSClients[user.id]) {
                     WSClients[ws.id].push(ws)
                 } else {
