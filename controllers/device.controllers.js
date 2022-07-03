@@ -134,11 +134,21 @@ class DeviceControllers{
         const modules = (await db.query(`SELECT * FROM modules WHERE station_id = $1`, [id_station])).rows
         if (modules) {
             modules.forEach((mod) => {
-                if (Date.now()-mod.time < 3000) {
-                    mod.active = true
-                } else {
-                    mod.active = false
+                switch(mod.type) {
+                    case 0-9:
+                        if (Date.now()-mod.time < 3000) {
+                            mod.active = true
+                        } else {
+                            mod.active = false
+                        }
+                    case 10-30:
+                        if (mod.value == 0) {
+                            mod.active = false
+                        } else {
+                            mod.active = true
+                        }
                 }
+                
             })
             return modules
         }
