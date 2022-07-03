@@ -95,6 +95,11 @@ async function answer(ws, message) {
             case "DELETE MODULE":
                 data = await deviceControllers.deleteModule(message.module)
                 break
+            
+            case "GUARD":
+                data = await deviceControllers.changeGuard(user_id, message.state)
+                break
+
             default:
                 data = {error: "Bad request"}
                 break

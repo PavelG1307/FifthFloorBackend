@@ -139,6 +139,10 @@ class DeviceControllers{
         }
     }
 
+    async changeGuard(user_id, state){
+        const station_id = await this.getStationIdFromUserId(id_user)
+        emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `GRD ${state}`);
+    }
 
     async getModules(id_station) {
         const modules = (await db.query(`SELECT * FROM modules WHERE station_id = $1`, [id_station])).rows
