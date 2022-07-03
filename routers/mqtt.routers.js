@@ -60,7 +60,7 @@ class MQTTRouters {
     }
 
     async ParseGuard(id, payload){
-        const parsemessage = status_message.split(' ')
+        const parsemessage = payload.split(' ')
         if (!(await this.check_key(parsemessage[0]))) {
             return
         }
