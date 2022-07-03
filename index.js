@@ -15,10 +15,7 @@ function onConnect(wsClient) {
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
         const {id, data} = await answer(wsClient, message)
-        id_ttt = id
-        if (id==-1) {
-            console.log('sddd')
-        } else {
+        if (id!=-1) {
             console.log('ID: ', id)
             wsClient.id = id
         }
@@ -43,11 +40,10 @@ function onConnect(wsClient) {
 async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
-    const answ = {
-        id: -1
-    }
+    let data
+    const id = user.id
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
-        answ.data = {error: "Token invalid"}
+        data = {error: "Token invalid"}
     } else {
         switch (type) {
             case "CONNECTED":
@@ -56,34 +52,34 @@ async function answer(ws, message) {
                 } else {
                     WSClients[ws.id] = [ws]
                 }
-                answ.data = await deviceControllers.getStatus(user.id)
-                answ.id = user.id
-                return answ
+                data = await deviceControllers.getStatus(user.id)
+                break
 
             case "SIGN IN":
-                answ.data = await UserControllers.getUser(message.login, message.password)
-                return answ
+                const data = await UserControllers.getUser(message.login, message.password)
+                break
 
             case "REGISTRATION":
-                answ.data = await UserControllers.createUser(message.login, message.password, message.email, message.phone_number)
-                return answ
+                data = await UserControllers.createUser(message.login, message.password, message.email, message.phone_number)
+                break
 
             case "GET STATUS":
-                answ.data = await deviceControllers.getStatus(user.id)
-                return answ
+                data = await deviceControllers.getStatus(user.id)
+                break
 
             case "ADD STATION":
-                answ.data = await deviceControllers.addStation(user.id, message.key)
-                return answ
+                data = await deviceControllers.addStation(user.id, message.key)
+                break
 
             case "SET BRIGHTNESS":
-                answ.data = await deviceControllers.setBrightness(user.id, message.brightness)
-                return answ
+                data = await deviceControllers.setBrightness(user.id, message.brightness)
+                break
 
             default:
-                answ.data = {error: "Bad request"}
-                return answ
+                data = {error: "Bad request"}
+                break
         }
+        return id,data
     }
 }
 
