@@ -41,7 +41,7 @@ async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
     let data
-    let id = null
+    let id = -1
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         data = {error: "Token invalid"}
     } else {
