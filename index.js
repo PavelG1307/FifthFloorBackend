@@ -39,7 +39,7 @@ function onConnect(wsClient) {
 async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
-    const answer = {}
+    const answer = {id: null}
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         answer.data = {error: "Token invalid"}
     } else {
