@@ -79,7 +79,7 @@ async function answer(ws, message) {
                 data = {error: "Bad request"}
                 break
         }
-        return id,data
+        return {id, data}
     }
 }
 
