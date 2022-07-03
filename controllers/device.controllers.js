@@ -137,13 +137,13 @@ class DeviceControllers{
                 if (mod.type<10) {
                     mod.active = true
                 } else if (mod.type<20){
-                        if (mod.value == 0) {
+                        if (mod.last_value == '0') {
                             mod.active = true
                         } else {
                             mod.active = false
                         }
                 } else {
-                    if (mod.value == 0) {
+                    if (mod.last_value == '0') {
                         mod.active = false
                     } else {
                         mod.active = true
