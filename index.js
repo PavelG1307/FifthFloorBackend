@@ -30,8 +30,9 @@ function onConnect(wsClient) {
 async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
+    const answer = {id: user.id}
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
-        return {error: "Token invalid"}
+        answer.data = {error: "Token invalid"}
     } else {
         switch (type) {
             case "CONNECTED":
@@ -41,23 +42,32 @@ async function answer(ws, message) {
                 } else {
                     WSClients[ws.id] = [ws]
                 }
-                return await deviceControllers.getStatus(user.id)
+                answer.data = await deviceControllers.getStatus(user.id)
+                return answer
 
             case "SIGN IN":
-                return await UserControllers.getUser(message.login, message.password)
+                answer.data = await UserControllers.getUser(message.login, message.password)
+                return answer
 
             case "REGISTRATION":
-                return await UserControllers.createUser(message.login, message.password, message.email, message.phone_number)
-            
+                answer.data = await UserControllers.createUser(message.login, message.password, message.email, message.phone_number)
+                return answer
+
             case "GET STATUS":
-                return await deviceControllers.getStatus(user.id)
-            
+                answer.data = await deviceControllers.getStatus(user.id)
+                return answer
+
             case "ADD STATION":
-                return await deviceControllers.addStation(user.id, message.key)
+                answer.data = await deviceControllers.addStation(user.id, message.key)
+                return answer
+
             case "SET BRIGHTNESS":
-                return await deviceControllers.setBrightness(user.id, message.brightness)
+                answer.data = await deviceControllers.setBrightness(user.id, message.brightness)
+                return answer
+
             default:
-                return {error: "Bad request"}
+                answer.data = {error: "Bad request"}
+                return answer
         }
     }
 }
