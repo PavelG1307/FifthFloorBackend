@@ -57,7 +57,7 @@ async function answer(ws, message) {
                 break
 
             case "SIGN IN":
-                const data = await UserControllers.getUser(message.login, message.password)
+                data = await UserControllers.getUser(message.login, message.password)
                 break
 
             case "REGISTRATION":
