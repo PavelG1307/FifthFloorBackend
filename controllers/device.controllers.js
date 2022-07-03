@@ -199,7 +199,7 @@ class DeviceControllers{
 
     async updateModuleName(id_module, name_module, location){
         console.log('update_name')
-                console.log(db.query(`
+                console.log(await db.query(`
                 UPDATE modules SET
                     name = $2,
                     location = $3
