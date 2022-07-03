@@ -16,7 +16,7 @@ function onConnect(wsClient) {
         const message = JSON.parse(rawMessage)
         const data = await answer(wsClient, message)
 
-        if (!wsClient.id) {
+        if (data.id) {
             wsClient.id = data.id
         }
 
@@ -36,19 +36,19 @@ function onConnect(wsClient) {
 async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
-    const answer = {id: user.id}
+    const answer = {}
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         answer.data = {error: "Token invalid"}
     } else {
         switch (type) {
             case "CONNECTED":
                 if (WSClients[user.id]) {
-                    ws.id = user.id
                     WSClients[ws.id].push(ws)
                 } else {
                     WSClients[ws.id] = [ws]
                 }
                 answer.data = await deviceControllers.getStatus(user.id)
+                answer.id = user.id
                 return answer
 
             case "SIGN IN":
