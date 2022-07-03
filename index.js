@@ -25,7 +25,7 @@ function onConnect(wsClient) {
 
     wsClient.on('close', function() {
         console.log('Пользователь отключился');
-        if (wsClient.id) {
+        if (wsClient.id.lenght>0) {
             i = WSClients[wsClient.id].indexOf(wsClient);
             if(i >= 0) {
                 WSClients[wsClient.id].splice(i,1);
@@ -39,7 +39,7 @@ function onConnect(wsClient) {
 async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
-    const answer = {id: null}
+    const answer = {}
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         answer.data = {error: "Token invalid"}
     } else {
