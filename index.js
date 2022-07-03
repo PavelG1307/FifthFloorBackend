@@ -16,20 +16,20 @@ function onConnect(wsClient) {
         const message = JSON.parse(rawMessage)
         const result = await answer(wsClient, message)
         console.log(result)
-        // if (data.id) {
-        //     console.log('ID: ', data.id)
-        //     // wsClient.id = data.id
-        // }
+        if (data.id) {
+            console.log('ID: ', data.id)
+            wsClient.id = result.id
+        }
 
         wsClient.send(JSON.stringify(result.data))
     })
 
     wsClient.on('close', function() {
         console.log('Пользователь отключился');
-        // if (wsClient.id) {
-        //     WSClients[wsClient.id].splice(wsClient)
-        //     console.log('array cleaned')
-        // }
+        if (wsClient.id) {
+            WSClients[wsClient.id].splice(wsClient)
+            console.log('array cleaned')
+        }
     })
 }
 
