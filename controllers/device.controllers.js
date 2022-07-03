@@ -17,7 +17,6 @@ class DeviceControllers{
                 station.active = false
             }
             station.type = "status"
-            console.log(station)
         } else {
             return {error: 'Station not found'}
         }
@@ -28,7 +27,6 @@ class DeviceControllers{
         console.log(`New stations: ${id_user}`)
         try{
             const station = await db.query(`INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, $1, false, 0, $2, NOW()) RETURNING *`,[id_user, secret_key])
-            console.log(station)
             if (station) {
                 for (let i = 0; i<5; i++){
                     await db.query(`INSERT INTO rings (name, time, active, visible, sunrise, music, user_id, station_id) VALUES ('ring', 0, false, false, true, 0, $1, $2)`,[id_user, station.id])
@@ -79,7 +77,6 @@ class DeviceControllers{
 
     async setStatus(status) {
         try{
-            console.log(status)
             const user_id = (await db.query(
             `UPDATE stations
             SET time = $1,
