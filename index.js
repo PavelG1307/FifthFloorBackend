@@ -32,7 +32,7 @@ function onConnect(wsClient) {
 
     wsClient.on('close', function(ws) {
         console.log(ws)
-        console.log(this.id)
+        console.log(wsClient.id)
         // console.log(wsClient.id)
         console.log('Пользователь отключился');
         if (this.id) {
