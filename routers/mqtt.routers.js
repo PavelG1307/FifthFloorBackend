@@ -65,7 +65,7 @@ class MQTTRouters {
         if (!(await this.check_key(parsemessage[0]))) {
             return
         }
-        emitter.eventBus.sendEvent('Updated guard', user_id, parsemessage[0] === '1');
+        emitter.eventBus.sendEvent('Updated guard', user_id, parsemessage[1] === '1');
     }
 
     async check_key(key_stations) {
