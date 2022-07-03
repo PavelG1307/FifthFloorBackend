@@ -15,7 +15,10 @@ function onConnect(wsClient) {
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
         const {id, data} = await answer(wsClient, message)
-        if (id!=-1) {
+        id_ttt = id
+        if (id==-1) {
+            console.log('sddd')
+        } else {
             console.log('ID: ', id)
             wsClient.id = id
         }
@@ -41,7 +44,7 @@ async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
     const answ = {
-        id: -1,
+        id: -1
     }
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         answ.data = {error: "Token invalid"}
