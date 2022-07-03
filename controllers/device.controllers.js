@@ -62,13 +62,15 @@ class DeviceControllers{
 
 
     async setBrightness(id_user, brightness) {
-        const default_bright = 7
         const station_id = await this.getStationIdFromUserId(id_user)
-        const bright_value = brightness? default_bright : 0
-        emitter.eventBus.sendEvent('Updated brightness', station_id, bright_value);
+        emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `BRT ${brightness}`);
         return {error: null}
     }
 
+    async setSpeaker(id_user){
+        const station_id = await this.getStationIdFromUserId(id_user)
+        emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `SPQ ${volume}`);
+    }
 
     async setRing() {
 

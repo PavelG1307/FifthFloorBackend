@@ -29,24 +29,18 @@ class MQTTServer {
             })
         }
       }
-      
-
-    //   client.publish(topic, 'nodejs mqtt test', { qos: 0, retain: false }, (error) => {
-    //     if (error) {
-    //       console.error(error)
-    //     }
-    //   })
     })
 
     client.on('message', await this.onMessage)
 
-    emitter.eventBus.on('Updated brightness', 
-        async function (id, brightness){
-              console.log(`Set brightness: ${brightness} to id: ${id}`)
-              client.publish(`${id}/brightness`, `BRT ${brightness}`, { qos: 0, retain: false }, (error) => {
+    emitter.eventBus.on('Updated data', 
+        async function (id, topic, data){
+              client.publish(`${id}/${topic}`, data, { qos: 0, retain: false }, (error) => {
                     if (error) {console.log(error)}
               })
         })
+
+        'Updated speaker'
   }
 
 

@@ -41,7 +41,6 @@ function onConnect(wsClient) {
             if(i >= 0) {
                 WSClients[this.id].splice(i,1);
             }
-            console.log('array cleaned')
             console.log('Клиентов у пользвателя: ', WSClients[this.id].length)
         }
     })
@@ -82,6 +81,10 @@ async function answer(ws, message) {
                 data = await deviceControllers.setBrightness(user.id, message.brightness)
                 break
 
+            case "SET SPEAKER":
+                data = await deviceControllers.setSpeaker(user.id, message.volume)
+                break
+
             default:
                 data = {error: "Bad request"}
                 break
@@ -89,6 +92,7 @@ async function answer(ws, message) {
         return {id, data}
     }
 }
+
 
 emitter.eventBus.on('Updated status', 
     async function (id){
@@ -104,6 +108,7 @@ emitter.eventBus.on('Updated status',
         }
     }
 )
+
 
 wsServer.on('listening', () => {console.log(`Сервер запущен на ${port} порту`)});
 mqttServer.runMQTT()
