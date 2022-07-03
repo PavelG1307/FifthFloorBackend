@@ -142,7 +142,11 @@ class DeviceControllers{
     async changeGuard(id_user, state){
         const station_id = await this.getStationIdFromUserId(id_user)
         emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `GRD ${state}`);
-        return {error: null}
+        
+        return {
+            type: "guard",
+            message: "Success"
+        }
     }
 
     async getModules(id_station) {
