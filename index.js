@@ -41,13 +41,13 @@ async function answer(ws, message) {
     const {token, type} = message
     user = await checkToken(token)
     let data
-    let id = -1
+    const id = -1
     if (!user && type != "SIGN IN" && type != "REGISTRATION") {
         data = {error: "Token invalid"}
     } else {
         switch (type) {
             case "CONNECTED":
-                id = user.id
+                // id = user.id
                 if (WSClients[user.id]) {
                     WSClients[ws.id].push(ws)
                 } else {
