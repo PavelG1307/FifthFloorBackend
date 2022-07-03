@@ -197,10 +197,18 @@ class DeviceControllers{
         }
     }
 
+    async updateModuleName(id_module, name_module, location){
+        console.log('update_name')
+                console.log(db.query(`
+                UPDATE modules SET
+                    name = $2,
+                    location = $3
+                WHERE id_module = $1`,
+                [id_module, name_module, location]))
+    }
 
     async updateModule(id_module, type, value, time_update, station_id, name = "", location = ""){
         try{
-            if (value) {
                 const id = await db.query(`
                         INSERT INTO modules (
                             id_module,
@@ -230,15 +238,6 @@ class DeviceControllers{
                         station_id
                     ]
                 )
-            } else {
-                console.log('update_name')
-                console.log(db.query(`
-                UPDATE modules SET
-                    name = $2,
-                    location = $3
-                WHERE id_module = $1`,
-                [id_module, name, location]))
-            }
         } catch(e) {
             console.log(e)
         }
