@@ -15,7 +15,7 @@ function onConnect(wsClient) {
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
         const result = await answer(wsClient, message)
-        if (data.id) {
+        if (result.id) {
             console.log('ID: ', data.id)
             wsClient.id = result.id
         }
