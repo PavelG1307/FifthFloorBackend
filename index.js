@@ -20,9 +20,9 @@ function onConnect(wsClient) {
                 wsClient.id = result.id
                 console.log('ID: ', wsClient.id)
                 if (WSClients[user.id]) {
-                    WSClients[id].push(this)
+                    WSClients[result.id].push(this)
                 } else {
-                    WSClients[id] = [this]
+                    WSClients[result.id] = [this]
                 }
             }
 
