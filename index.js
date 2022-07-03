@@ -88,8 +88,10 @@ async function answer(ws, message) {
             case "SET MODULE":
                 data = await deviceControllers.setModule(user.id, message.module, message.state)
                 break
+
             case "UPDATE MODULE":
                 data = await deviceControllers.updateModuleName(message.module, message.name, message.location)
+            
             case "DELETE MODULE":
                 data = await deviceControllers.deleteModule(message.module)
             default:

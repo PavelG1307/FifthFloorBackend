@@ -198,13 +198,17 @@ class DeviceControllers{
     }
 
     async updateModuleName(id_module, name_module, location){
-        console.log('update_name')
-                console.log(await db.query(`
+        try{
+            console.log(await db.query(`
                 UPDATE modules SET
                     name = $2,
                     location = $3
                 WHERE id_module = $1`,
                 [id_module, name_module, location]))
+        } catch(e) {
+            console.log(e)
+            return {error: 'Server Error'}
+        }
     }
 
     async updateModule(id_module, type, value, time_update, station_id, name = "", location = ""){
