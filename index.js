@@ -11,15 +11,18 @@ wsServer.on('connection', onConnect);
 
 function onConnect(wsClient) {
     console.log("New client");
-
     wsClient.on('message', async function(rawMessage) {
-        let message = JSON.parse(rawMessage)
-        res = await answer(wsClient, message)
+        const message = JSON.parse(rawMessage)
+        const res = await answer(wsClient, message)
         wsClient.send(JSON.stringify(res))
     })
 
     wsClient.on('close', function() {
         console.log('Пользователь отключился');
+        if (wsClient.id) {
+            WSClients[wsClient.id].splice(wsClient)
+            console.log('array cleaned')
+        }
     })
 }
 
@@ -33,9 +36,10 @@ async function answer(ws, message) {
         switch (type) {
             case "CONNECTED":
                 if (WSClients[user.id]) {
-                    WSClients[user.id].push(ws)
+                    ws.id = user.id
+                    WSClients[ws.id].push(ws)
                 } else {
-                    WSClients[user.id] = [ws]
+                    WSClients[ws.id] = [ws]
                 }
                 return await deviceControllers.getStatus(user.id)
 
@@ -69,7 +73,6 @@ emitter.eventBus.on('Updated status',
             })
             }
         } catch (e) {
-            // WSClients[id].send(JSON.stringify({error: "Error on server"}))
             console.log(e)
         }
     }
