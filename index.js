@@ -32,7 +32,11 @@ async function answer(ws, message) {
     } else {
         switch (type) {
             case "CONNECTED":
-                WSClients[user.id] = ws
+                if (WSClients[user.id]) {
+                    WSClients[user.id].push(ws)
+                } else {
+                    WSClients[user.id] = [ws]
+                }
                 return await deviceControllers.getStatus(user.id)
 
             case "SIGN IN":
@@ -58,7 +62,13 @@ async function answer(ws, message) {
 emitter.eventBus.on('Updated status', 
     async function (id){
         try {
-            WSClients[id].send(JSON.stringify(await deviceControllers.getStatus(id)))    
+            if (WSClients[user.id]) {
+            // const data = JSON.stringify(await deviceControllers.getStatus(id))
+            WSClients[id].forEach((ws) => {
+                console.log(ws)
+            //     send(data)
+            })
+            }
         } catch (e) {
             WSClients[id].send(JSON.stringify({error: "Error on server"}))
             console.log(e)
