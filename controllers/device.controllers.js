@@ -205,6 +205,7 @@ class DeviceControllers{
                     location = $3
                 WHERE id_module = $1`,
                 [id_module, name_module, location]))
+            return {error: null, message: 'Success'}
         } catch(e) {
             console.log(e)
             return {error: 'Server Error'}
