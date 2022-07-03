@@ -67,7 +67,7 @@ class DeviceControllers{
         return {error: null}
     }
 
-    async setSpeaker(id_user){
+    async setSpeaker(id_user, volume){
         const station_id = await this.getStationIdFromUserId(id_user)
         emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `SPQ ${volume}`);
     }
