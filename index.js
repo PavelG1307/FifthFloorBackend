@@ -14,14 +14,14 @@ function onConnect(wsClient) {
 
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
-        let result = await answer(wsClient, message)
+        const {id, data} = await answer(wsClient, message)
         console.log(result)
-        if (result.id) {
-            console.log('ID: ', result.id)
-            wsClient.id = result.id
+        if (id) {
+            console.log('ID: ', id)
+            wsClient.id = id
         }
 
-        wsClient.send(JSON.stringify(result.data))
+        wsClient.send(JSON.stringify(data))
     })
 
     wsClient.on('close', function(ws) {
