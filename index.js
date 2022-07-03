@@ -24,7 +24,7 @@ function onConnect(wsClient) {
                 } else {
                     WSClients[result.id] = [this]
                 }
-                console.log('Клиентов у пользвателя: ', WSClients.length)
+                console.log('Клиентов у пользвателя: ', WSClients[result.id].length)
             }
 
             wsClient.send(JSON.stringify(result.data))
@@ -42,7 +42,7 @@ function onConnect(wsClient) {
                 WSClients[this.id].splice(i,1);
             }
             console.log('array cleaned')
-            console.log('Клиентов у пользвателя: ', WSClients.length)
+            console.log('Клиентов у пользвателя: ', WSClients[this.id].length)
         }
     })
 }
