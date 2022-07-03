@@ -14,7 +14,7 @@ function onConnect(wsClient) {
 
     wsClient.on('message', async function(rawMessage) {
         const message = JSON.parse(rawMessage)
-        const result = await answer(wsClient, message)
+        let result = await answer(wsClient, message)
         console.log(result)
         if (result.id) {
             console.log('ID: ', result.id)
@@ -24,7 +24,8 @@ function onConnect(wsClient) {
         wsClient.send(JSON.stringify(result.data))
     })
 
-    wsClient.on('close', function() {
+    wsClient.on('close', function(ws) {
+        console.log(ws)
         console.log('Пользователь отключился');
         if (wsClient.id) {
             i = WSClients[wsClient.id].indexOf(wsClient);
