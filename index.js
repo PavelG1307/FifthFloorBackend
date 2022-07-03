@@ -26,7 +26,10 @@ function onConnect(wsClient) {
     wsClient.on('close', function() {
         console.log('Пользователь отключился');
         if (wsClient.id) {
-            WSClients[wsClient.id].splice(wsClient)
+            i = WSClients[wsClient.id].indexOf(wsClient);
+            if(i >= 0) {
+                WSClients[wsClient.id].splice(i,1);
+            }
             console.log('array cleaned')
         }
     })
