@@ -17,7 +17,8 @@ function onConnect(wsClient) {
         const data = await answer(wsClient, message)
 
         if (data.id) {
-            wsClient.id = data.id
+            console.log('sfdsdfs')
+            // wsClient.id = data.id
         }
 
         wsClient.send(JSON.stringify(data.data))
