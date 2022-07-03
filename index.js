@@ -35,7 +35,7 @@ function onConnect(wsClient) {
         console.log(this.id)
         // console.log(wsClient.id)
         console.log('Пользователь отключился');
-        if (wsClient.id) {
+        if (this.id) {
             i = WSClients[this.id].indexOf(this);
             if(i >= 0) {
                 WSClients[this.id].splice(i,1);
