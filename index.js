@@ -70,7 +70,7 @@ emitter.eventBus.on('Updated status',
             })
             }
         } catch (e) {
-            WSClients[id].send(JSON.stringify({error: "Error on server"}))
+            // WSClients[id].send(JSON.stringify({error: "Error on server"}))
             console.log(e)
         }
     }
