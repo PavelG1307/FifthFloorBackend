@@ -149,8 +149,8 @@ class DeviceControllers{
                         mod.active = true
                     }
                 }
-                
-                if (Date.now()-mod.time > 3000) {
+
+                if (Date.now()-mod.time > 60000) {
                     mod.active = false
                 }
             
