@@ -135,18 +135,25 @@ class DeviceControllers{
         if (modules) {
             modules.forEach((mod) => {
                 if (mod.type<10) {
-                        if (Date.now()-mod.time < 3000) {
+                    mod.active = true
+                } else if (mod.type<20){
+                        if (mod.value == 0) {
                             mod.active = true
                         } else {
                             mod.active = false
                         }
                 } else {
-                        if (mod.value == 0) {
-                            mod.active = false
-                        } else {
-                            mod.active = true
-                        }
+                    if (mod.value == 0) {
+                        mod.active = false
+                    } else {
+                        mod.active = true
+                    }
                 }
+                
+                if (Date.now()-mod.time > 3000) {
+                    mod.active = false
+                }
+            
                 
             })
             return modules
