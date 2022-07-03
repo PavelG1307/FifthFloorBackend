@@ -60,7 +60,7 @@ class MQTTRouters {
     }
 
     async ParseGuard(id, payload){
-        user_id = await deviceControllers.getUserIdFromStationId(id)
+        const user_id = await deviceControllers.getUserIdFromStationId(id)
         const parsemessage = payload.split(' ')
         if (!(await this.check_key(parsemessage[0]))) {
             return
