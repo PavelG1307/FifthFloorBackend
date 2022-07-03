@@ -97,7 +97,7 @@ async function answer(ws, message) {
                 break
             
             case "GUARD":
-                data = await deviceControllers.changeGuard(user_id, message.state)
+                data = await deviceControllers.changeGuard(user.id, message.state)
                 break
 
             default:
