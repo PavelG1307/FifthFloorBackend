@@ -59,6 +59,14 @@ class MQTTRouters {
         await deviceControllers.updateModules(id_station, modules)
     }
 
+    async ParseGuard(id, payload){
+        const parsemessage = status_message.split(' ')
+        if (!(await this.check_key(parsemessage[0]))) {
+            return
+        }
+        emitter.eventBus.sendEvent('Updated guard', user_id, parsemessage[0] === '1');
+    }
+
     async check_key(key_stations) {
         return true
     }

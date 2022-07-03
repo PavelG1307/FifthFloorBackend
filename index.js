@@ -109,6 +109,23 @@ async function answer(ws, message) {
 }
 
 
+emitter.eventBus.on('Updated guard', 
+    async function (id, state){
+        try {
+            const data = JSON.stringify({
+                type: "guard",
+                message: "Success",
+                state: state
+            })
+
+            WSClients[id].forEach((ws) => {
+                ws.send(data)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+})
+
 emitter.eventBus.on('Updated status', 
     async function (id){
         try {
