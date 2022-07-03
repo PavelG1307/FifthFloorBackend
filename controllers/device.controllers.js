@@ -144,8 +144,7 @@ class DeviceControllers{
         emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `GRD ${state}`);
         
         return {
-            type: "guard",
-            message: "Success"
+            error: null
         }
     }
 
