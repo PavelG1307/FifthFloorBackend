@@ -19,6 +19,11 @@ function onConnect(wsClient) {
             if (result.id) {
                 wsClient.id = result.id
                 console.log('ID: ', wsClient.id)
+                if (WSClients[user.id]) {
+                    WSClients[id].push(this)
+                } else {
+                    WSClients[id] = [this]
+                }
             }
 
             wsClient.send(JSON.stringify(result.data))
@@ -31,9 +36,9 @@ function onConnect(wsClient) {
         // console.log(wsClient.id)
         console.log('Пользователь отключился');
         if (wsClient.id) {
-            i = WSClients[wsClient.id].indexOf(wsClient);
+            i = WSClients[this.id].indexOf(this);
             if(i >= 0) {
-                WSClients[wsClient.id].splice(i,1);
+                WSClients[this.id].splice(i,1);
             }
             console.log('array cleaned')
         }
@@ -52,11 +57,6 @@ async function answer(ws, message) {
         switch (type) {
             case "CONNECTED":
                 id = user.id
-                if (WSClients[user.id]) {
-                    WSClients[ws.id].push(ws)
-                } else {
-                    WSClients[ws.id] = [ws]
-                }
                 data = await deviceControllers.getStatus(user.id)
                 break
 
