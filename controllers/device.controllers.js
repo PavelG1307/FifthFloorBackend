@@ -232,9 +232,10 @@ class DeviceControllers{
                 )
             } else {
                 console.log(db.query(`
-                UPDATE SET id_module = $1,
+                UPDATE modules SET
                     name = $2,
-                    location = $3`,
+                    location = $3
+                WHERE id_module = $1`,
                 [id_module, name, location]))
             }
         } catch(e) {
