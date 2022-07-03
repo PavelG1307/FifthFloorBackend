@@ -17,7 +17,7 @@ function onConnect(wsClient) {
         const data = await answer(wsClient, message)
 
         if (data.id) {
-            console.log('sfdsdfs')
+            console.log('ID: ', data.id)
             // wsClient.id = data.id
         }
 
@@ -43,11 +43,11 @@ async function answer(ws, message) {
     } else {
         switch (type) {
             case "CONNECTED":
-                if (WSClients[user.id]) {
-                    WSClients[ws.id].push(ws)
-                } else {
-                    WSClients[ws.id] = [ws]
-                }
+                // if (WSClients[user.id]) {
+                //     WSClients[ws.id].push(ws)
+                // } else {
+                //     WSClients[ws.id] = [ws]
+                // }
                 answer.data = await deviceControllers.getStatus(user.id)
                 answer.id = user.id
                 return answer
