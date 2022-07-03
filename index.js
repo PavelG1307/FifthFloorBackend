@@ -85,6 +85,10 @@ async function answer(ws, message) {
                 data = await deviceControllers.setSpeaker(user.id, message.volume)
                 break
 
+            case "SET MODULE":
+                data = await deviceControllers.setModule(user.id, message.state)
+                break
+
             default:
                 data = {error: "Bad request"}
                 break
