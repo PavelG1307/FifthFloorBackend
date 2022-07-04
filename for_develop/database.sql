@@ -53,3 +53,5 @@ INSERT INTO stations (time, battery, brightness, user_id, guard, speaker, secret
 
 
 UPDATE rings SET active=true, time=1, sunrise = false, music = 3 WHERE id = 2;
+
+INSERT INTO rings (name, active, visible, sunrise, music, station_id) VALUES (time name, false, false, 1, $1)

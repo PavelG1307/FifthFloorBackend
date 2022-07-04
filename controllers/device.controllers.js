@@ -44,7 +44,6 @@ class DeviceControllers{
         }
     }
 
-
     async getRings(id_user, id_station) {
         let rings
         if (id_station) {
@@ -60,7 +59,6 @@ class DeviceControllers{
         return {}
     }
 
-
     async setBrightness(id_user, brightness) {
         const station_id = await this.getStationIdFromUserId(id_user)
         emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `BRT ${brightness}`);
@@ -73,17 +71,44 @@ class DeviceControllers{
         return {error: null}
     }
 
-    async setRing() {
+    async setRings(id_station, rings) {
+        for (key in rings) {
+
+        }
+    }
+
+    async setVisibleRing(id_user, visible) {
+        const station_id = await this.getStationIdFromUserId(id_user)
+        const rings = (await db.query("SELECT id, visible FROM rings WHERE station_id = $1 ORDER BY id", [station_id])).rows
+        console.log(rings)
+        const updated_ring = await db.query("UPDATE rings SET visible = $1 WHERE id = $2 RETURNING *;", [visible, rings[count]])
+    }
+    async setRing(id, count, time, sunrise, music, active, visible, id_station, id_user) { 
+        try {
+            if (id_station) {
+                const rings = (await db.query("SELECT id FROM rings WHERE station_id = $1 ORDER BY id", [id_station])).rows[0]
+            } else if(id_user) {
+                const rings = (await db.query("SELECT id FROM rings WHERE user_id = $1 ORDER BY id", [id_user])).rows[0]
+                const updated_ring = await db.query("UPDATE rings SET time=$2, sunrise = $3, music = $4, visible = $5 WHERE id = $6 RETURNING *;", [active, time, sunrise, music, visible, rings[count]])
+            } else {
+                return {error: 'Bad request'}
+            }
+            console.log(updated_ring.row[0])
+        } catch(e) {
+            console.log(e)
+            return {error: 'Server Error'}
+        }
+    }
+
+    async updateRing(){
 
     }
-    
 
     async setModule(id_user, id_module, state){
         const station_id = await this.getStationIdFromUserId(id_user)
         emitter.eventBus.sendEvent('Updated data', station_id, 'remote', `MDL ${id_module} ${state}`);
         return {error: null}
     }
-
 
     async setStatus(status) {
         try{
@@ -123,7 +148,8 @@ class DeviceControllers{
                 SET active = true,
                     time = $1,
                     sunrise = $2,
-                    music = $3
+                    music = $3,
+                    visible = true
                 WHERE id = $4
                 `,
                 [status.rings[i].time,
@@ -179,7 +205,6 @@ class DeviceControllers{
         return {}
     }
 
-
     async addModule(user_id, station_id, id_module, type, time, value, location, name_module) {
         try{
             module = await db.query(
@@ -193,7 +218,6 @@ class DeviceControllers{
             return {error: 'Server Error'}
         }
     }
-
 
     async deleteModule(id_module) {
         try{
@@ -256,7 +280,6 @@ class DeviceControllers{
         }
 
     }
-
 
     async updateModules(station_id, status_message){
         console.log(status_message, station_id)
