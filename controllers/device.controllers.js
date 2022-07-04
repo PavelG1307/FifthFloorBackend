@@ -99,6 +99,22 @@ class DeviceControllers{
         }
     }
 
+    async setActiveRing(ring_id, user_id, state){
+        try {
+            const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $5 and user_id = $6 RETURNING *;",
+            [state, ring_id, user_id]
+            )
+                return {
+                    type: "SAVE RING",
+                    message: "Success",
+                    state: updated_ring.rows[0].active,
+                    error: null
+                }
+        } catch(e) {
+            console.log(e)
+            return {error: 'Server Error'}
+        }
+    }
 
     async setModule(id_user, id_module, state){
         const station_id = await this.getStationIdFromUserId(id_user)

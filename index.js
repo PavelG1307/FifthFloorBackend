@@ -100,6 +100,10 @@ async function answer(ws, message) {
                 data = await deviceControllers.editRing(user.id, message.id, message.time, message.active, message.sunrise, message.music)
                 break
 
+            case "SET ACTIVE RING":
+                data = await deviceControllers.setActiveRing(message.id, user.id, message.active)
+                break
+
             case "GUARD":
                 data = await deviceControllers.changeGuard(user.id, message.value)
                 break
