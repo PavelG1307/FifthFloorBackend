@@ -8,7 +8,7 @@ class DeviceControllers{
         if (station){
             const {id} = station
             const modules = await this.getModules(id)
-            const rings = await this.getRings(false, id)
+            const rings = await this.getRings(null, id)
             station.modules = modules
             station.rings = rings
             if (Date.now() - station.last_update < 300000) {
@@ -48,13 +48,10 @@ class DeviceControllers{
         console.log(`Get rings for ${id_station}`)
         let rings
         if (id_station) {
-            rings = (await db.query("SELECT * FROM rings WHERE station_id = $1", [id_station])).rows[0]
-            console.log(rings)
-        } else if(id_user) {
-            rings = (await db.query("SELECT * FROM rings WHERE user_id = $1", [id_user])).rows[0]
-        } else {
-            rings = {error: "Server Error"}
+            id_user = await this.getUserIdFromStationId(id_station)
         }
+        rings = (await db.query("SELECT * FROM rings WHERE user_id = $1", [id_user])).rows[0]
+        console.log(rings)
         if (rings) {
             return rings
         }
