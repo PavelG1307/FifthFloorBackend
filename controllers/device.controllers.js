@@ -82,17 +82,10 @@ class DeviceControllers{
         console.log(rings)
         const updated_ring = await db.query("UPDATE rings SET visible = $1 WHERE id = $2 RETURNING *;", [visible, rings[count]])
     }
-    
-    async setRing(id, count, time, sunrise, music, active, visible, id_station, id_user) { 
+
+    async editRint(id_user, id_ring, time, active, sunrise, music){
         try {
-            if (id_station) {
-                const rings = (await db.query("SELECT id FROM rings WHERE station_id = $1 ORDER BY id", [id_station])).rows[0]
-            } else if(id_user) {
-                const rings = (await db.query("SELECT id FROM rings WHERE user_id = $1 ORDER BY id", [id_user])).rows[0]
-                const updated_ring = await db.query("UPDATE rings SET time=$2, sunrise = $3, music = $4, visible = $5 WHERE id = $6 RETURNING *;", [active, time, sunrise, music, visible, rings[count]])
-            } else {
-                return {error: 'Bad request'}
-            }
+            const updated_ring = await db.query("UPDATE rings SET time=$2, sunrise = $3, music = $4, visible = true WHERE id = $6 and user_id = $7 RETURNING *;", [active, time, sunrise, music, visible, id_ring, id_user])
             console.log(updated_ring.row[0])
         } catch(e) {
             console.log(e)
@@ -100,9 +93,6 @@ class DeviceControllers{
         }
     }
 
-    async updateRing(){
-
-    }
 
     async setModule(id_user, id_module, state){
         const station_id = await this.getStationIdFromUserId(id_user)

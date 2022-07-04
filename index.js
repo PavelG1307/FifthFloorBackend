@@ -96,6 +96,10 @@ async function answer(ws, message) {
                 data = await deviceControllers.deleteModule(message.module)
                 break
             
+            case "EDIT RING":
+                data = await deviceControllers.editRing(message.id, message.time, message.active === "on", message.sunrise === "on", message.music)
+                break
+
             case "GUARD":
                 data = await deviceControllers.changeGuard(user.id, message.value)
                 break
