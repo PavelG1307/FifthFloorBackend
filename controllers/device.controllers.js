@@ -82,6 +82,7 @@ class DeviceControllers{
         console.log(rings)
         const updated_ring = await db.query("UPDATE rings SET visible = $1 WHERE id = $2 RETURNING *;", [visible, rings[count]])
     }
+    
     async setRing(id, count, time, sunrise, music, active, visible, id_station, id_user) { 
         try {
             if (id_station) {
