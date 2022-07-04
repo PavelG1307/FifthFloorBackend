@@ -97,7 +97,7 @@ async function answer(ws, message) {
                 break
             
             case "EDIT RING":
-                data = await deviceControllers.editRing(message.id, message.time, message.active === "on", message.sunrise === "on", message.music)
+                data = await deviceControllers.editRing(user.id, message.id, message.time, message.active === "on", message.sunrise === "on", message.music)
                 break
 
             case "GUARD":
