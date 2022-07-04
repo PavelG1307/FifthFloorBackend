@@ -50,7 +50,7 @@ class DeviceControllers{
         if (id_station) {
             id_user = await this.getUserIdFromStationId(id_station)
         }
-        rings = (await db.query("SELECT * FROM rings WHERE user_id = $1", [id_user])).rows[0]
+        rings = (await db.query("SELECT * FROM rings WHERE user_id = $1", [id_user])).rows
         console.log(rings)
         if (rings) {
             return rings
