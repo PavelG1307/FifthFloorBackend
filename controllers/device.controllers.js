@@ -83,7 +83,7 @@ class DeviceControllers{
         const updated_ring = await db.query("UPDATE rings SET visible = $1 WHERE id = $2 RETURNING *;", [visible, rings[count]])
     }
 
-    async editRint(id_user, id_ring, time, active, sunrise, music){
+    async editRing(id_user, id_ring, time, active, sunrise, music){
         try {
             const updated_ring = await db.query("UPDATE rings SET time=$2, sunrise = $3, music = $4, visible = true WHERE id = $6 and user_id = $7 RETURNING *;", [active, time, sunrise, music, visible, id_ring, id_user])
             console.log(updated_ring.row[0])
