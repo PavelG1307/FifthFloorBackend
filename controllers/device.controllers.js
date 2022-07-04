@@ -87,15 +87,12 @@ class DeviceControllers{
         try {
             console.log(active, time, sunrise, music, id_ring, id_user)
             const updated_ring = await db.query("UPDATE rings SET active = $1, time=$2, sunrise = $3, music = $4, visible = true WHERE id = $5 and user_id = $6 RETURNING *;", [active, time, sunrise, music, id_ring, id_user])
-            if (updated_ring.rows[0].active) {
                 return {
                     type: "SAVE RING",
                     message: "Success",
+                    state: updated_ring.rows[0].active,
                     error: null
                 }
-            } else {
-                return {error: 'Server Error'}
-            }
         } catch(e) {
             console.log(e)
             return {error: 'Server Error'}
