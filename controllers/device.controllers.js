@@ -8,7 +8,7 @@ class DeviceControllers{
         if (station){
             const {id} = station
             const modules = await this.getModules(id)
-            const rings = await this.getRings(null, id)
+            const rings = await this.getVisibleRings(null, id)
             station.modules = modules
             station.rings = rings
             if (Date.now() - station.last_update < 300000) {
@@ -44,13 +44,13 @@ class DeviceControllers{
         }
     }
 
-    async getRings(id_user, id_station) {
+    async getVisibleRings(id_user, id_station) {
         console.log(`Get rings for ${id_station}`)
         let rings
         if (id_station) {
             id_user = await this.getUserIdFromStationId(id_station)
         }
-        rings = (await db.query("SELECT * FROM rings WHERE user_id = $1", [id_user])).rows
+        rings = (await db.query("SELECT * FROM rings WHERE user_id = $1 and visible ORDER BY id", [id_user])).rows
         console.log(rings)
         if (rings) {
             return rings
