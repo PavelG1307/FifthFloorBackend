@@ -100,8 +100,9 @@ class DeviceControllers{
     }
 
     async setActiveRing(ring_id, user_id, state){
+        console.log(ring_id, user_id, state)
         try {
-            const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $5 and user_id = $6 RETURNING *;",
+            const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $2 and user_id = $3 RETURNING *;",
             [state, ring_id, user_id]
             )
                 return {
