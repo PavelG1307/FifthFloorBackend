@@ -103,6 +103,9 @@ async function answer(ws, message) {
             case "SET ACTIVE RING":
                 data = await deviceControllers.setActiveRing(message.id, user.id, message.active)
                 break
+            
+            case "SET VISIBLE RING":
+                data = await deviceControllers.setVisibleRing(message.id, user.id, message.visible)
 
             case "GUARD":
                 data = await deviceControllers.changeGuard(user.id, message.value)

@@ -100,7 +100,6 @@ class DeviceControllers{
     }
 
     async setActiveRing(ring_id, user_id, state){
-        console.log(ring_id, user_id, state)
         try {
             const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $2 and user_id = $3 RETURNING *;",
             [state, ring_id, user_id]
@@ -110,6 +109,21 @@ class DeviceControllers{
                     message: "Success",
                     state: updated_ring.rows[0].active,
                     error: null
+                }
+        } catch(e) {
+            console.log(e)
+            return {error: 'Server Error'}
+        }
+    }
+
+    async setVisibleRing(ring_id, user_id, state){
+        try {
+            const updated_ring = await db.query("UPDATE rings SET visible = $1 WHERE id = $2 and user_id = $3 RETURNING *;",
+            [state, ring_id, user_id]
+            )
+                return {
+                    error: null,
+                    message: "Success",
                 }
         } catch(e) {
             console.log(e)
