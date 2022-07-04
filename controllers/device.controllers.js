@@ -45,7 +45,7 @@ class DeviceControllers{
     }
 
     async getRings(id_user, id_station) {
-        console.log('Get rings')
+        console.log(`Get rings for ${id_station}`)
         let rings
         if (id_station) {
             rings = (await db.query("SELECT * FROM rings WHERE station_id = $1", [id_station])).rows[0]
