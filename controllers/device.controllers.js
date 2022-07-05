@@ -45,13 +45,11 @@ class DeviceControllers{
     }
 
     async getVisibleRings(id_user, id_station) {
-        console.log(`Get rings for ${id_station}`)
         let rings
         if (id_station) {
             id_user = await this.getUserIdFromStationId(id_station)
         }
         rings = (await db.query("SELECT * FROM rings WHERE user_id = $1 and visible ORDER BY id", [id_user])).rows
-        console.log(rings)
         if (rings) {
             return rings
         }
