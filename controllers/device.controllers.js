@@ -70,12 +70,6 @@ class DeviceControllers{
         return {error: null}
     }
 
-    async setRings(id_station, rings) {
-        for (key in rings) {
-
-        }
-    }
-
     async setVisibleRing(id_user, visible) {
         const station_id = await this.getStationIdFromUserId(id_user)
         const rings = (await db.query("SELECT id, visible FROM rings WHERE station_id = $1 ORDER BY id", [station_id])).rows
@@ -101,15 +95,30 @@ class DeviceControllers{
 
     async setActiveRing(ring_id, user_id, state){
         try {
-            const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $2 and user_id = $3 RETURNING *;",
-            [state, ring_id, user_id]
-            )
-                return {
-                    type: "SAVE RING",
-                    message: "Success",
-                    state: updated_ring.rows[0].active,
-                    error: null
+            const station_id = getStationIdFromUserId(user_id)
+            const active_rings = await db.query("SELECT active, id, time, sunrise, music FROM rings WHERE station_id = $1 ORDER BY id",[station_id])
+            let req = ''
+            let count = 0
+            for (i in active_rings.rows) {
+                const ring = active_rings.rows[i]
+                if (ring.active) {
+                    count++
+                    req +=i
+                    req += ("0000" + ring.time).slice(-4)
+                    req += ring.music
+                    req += ring.sunrise ? "1" : "0"
                 }
+            }
+            req = "rng" + count + req
+            emitter.eventBus.sendEvent('Updated data', station_id, 'req', req)
+            // const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $2 and user_id = $3 RETURNING *;",
+            // [state, ring_id, user_id]
+            return {
+                type: "SAVE RING",
+                message: "Success",
+                state: updated_ring.rows[0].active,
+                error: null
+            }
         } catch(e) {
             console.log(e)
             return {error: 'Server Error'}
