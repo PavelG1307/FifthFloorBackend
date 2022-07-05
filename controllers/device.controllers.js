@@ -93,14 +93,11 @@ class DeviceControllers{
 
     async setActiveRing(ring_id, user_id, state){
         try {
-            const station_id = await this.getStationIdFromUserId(user_id)
             const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $2 and user_id = $3 RETURNING *;",
             [state, ring_id, user_id])
-            console.log(updated_ring)
-            const active_rings = await db.query("SELECT active, id, time, sunrise, music FROM rings WHERE station_id = $1 ORDER BY id",[station_id])
+            const active_rings = await db.query("SELECT active, id, time, sunrise, music FROM rings WHERE user_id = $1 ORDER BY id",[user_id])
             let req = ''
             let count = 0
-            console.log(active_rings)
             for (i in active_rings.rows) {
                 const ring = active_rings.rows[i]
                 if (ring.active) {
