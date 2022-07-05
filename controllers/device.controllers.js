@@ -109,6 +109,7 @@ class DeviceControllers{
                 }
             }
             req = "rng" + count + req
+            const station_id = await this.getStationIdFromUserId(user_id)
             emitter.eventBus.sendEvent('Updated data', station_id, 'req', req)
             return {
                 type: "SAVE RING",
