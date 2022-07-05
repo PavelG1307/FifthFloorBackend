@@ -17,7 +17,7 @@ class MQTTServer {
       reconnectPeriod: 1000,
     })
 
-    const subtopic = ['/status', '/modules', '/guard']
+    const subtopic = ['/stt', '/sens', '/guard']
 
     client.on('connect', () => {
       console.log('Connected')
@@ -50,10 +50,10 @@ class MQTTServer {
       const endpoint = topic.split('/')[1]
 
       switch(endpoint) {
-          case 'status':
+          case 'stt':
               await MQTTRouter.ParseStatus(id, payload.toString())
               break
-          case 'modules':
+          case 'sens':
               await MQTTRouter.ParseModuleMessage(id, payload.toString())
               break
           case 'guard':

@@ -14,16 +14,20 @@ class MQTTRouters {
         const status = {id: id}
         status.brightness = parsestatus[1]
         const rings = []
-        for (let i in parsestatus[2].split(',')) {
-            const ring = {
-                id: parsestatus[2].split(',')[i],
-                time: parsestatus[3].split(',')[i],
-                sunrise: (parsestatus[4].split(',')[i] === 'true'),
-                music: parsestatus[5].split(',')[i]
+        if (parsestatus[2] == "0") {
+            status.rings = {}
+        } else {
+            for (let i in parsestatus[2].split(',')) {
+                const ring = {
+                    id: parsestatus[2].split(',')[i],
+                    time: parsestatus[3].split(',')[i],
+                    sunrise: (parsestatus[4].split(',')[i] === 'true'),
+                    music: parsestatus[5].split(',')[i]
+                }
+                rings.push(ring)
             }
-            rings.push(ring)
+            status.rings = rings
         }
-        status.rings = rings
         status.nightlight = {
             active: (parsestatus[6] === 'true'),
             timeOn: parsestatus[7].split(',')[0],
