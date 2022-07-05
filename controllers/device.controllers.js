@@ -98,11 +98,11 @@ class DeviceControllers{
             const active_rings = await db.query("SELECT active, id, time, sunrise, music FROM rings WHERE user_id = $1 ORDER BY id",[user_id])
             let req = ''
             let count = 0
-            for (i in active_rings.rows) {
+            for (const i in active_rings.rows) {
                 const ring = active_rings.rows[i]
                 if (ring.active) {
                     count++
-                    req +=i
+                    req += i
                     req += ("0000" + ring.time).slice(-4)
                     req += ring.music
                     req += ring.sunrise ? "1" : "0"
