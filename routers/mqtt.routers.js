@@ -44,7 +44,7 @@ class MQTTRouters {
         }
 
     async ParseModuleMessage(id_station, status_message){
-        const parsemessage = status_message.split(' ')
+        const parsemessage = status_message.trim().split(' ')
         if (parsemessage.length <= 2) {
             return
         }
