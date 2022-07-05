@@ -95,7 +95,7 @@ class DeviceControllers{
 
     async setActiveRing(ring_id, user_id, state){
         try {
-            const station_id = getStationIdFromUserId(user_id)
+            const station_id = await this.getStationIdFromUserId(user_id)
             const active_rings = await db.query("SELECT active, id, time, sunrise, music FROM rings WHERE station_id = $1 ORDER BY id",[station_id])
             let req = ''
             let count = 0
@@ -111,8 +111,6 @@ class DeviceControllers{
             }
             req = "rng" + count + req
             emitter.eventBus.sendEvent('Updated data', station_id, 'req', req)
-            // const updated_ring = await db.query("UPDATE rings SET active = $1 WHERE id = $2 and user_id = $3 RETURNING *;",
-            // [state, ring_id, user_id]
             return {
                 type: "SAVE RING",
                 message: "Success",
