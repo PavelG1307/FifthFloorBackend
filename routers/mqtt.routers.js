@@ -45,6 +45,9 @@ class MQTTRouters {
 
     async ParseModuleMessage(id_station, status_message){
         const parsemessage = status_message.split(' ')
+        if (parsemessage.length == 1) {
+            return
+        }
         const key_stations = parsemessage[0]
         if (!(await this.check_key(key_stations))) {
             return
@@ -76,6 +79,7 @@ class MQTTRouters {
         return true
     }
 }
+
 const MQTTRouter = new MQTTRouters()
 module.exports = {MQTTRouter, emitter}
 
