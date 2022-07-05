@@ -115,7 +115,7 @@ class DeviceControllers{
             return {
                 type: "SAVE RING",
                 message: "Success",
-                state: updated_ring.rows[0].active,
+                // state: updated_ring.rows[0].active,
                 error: null
             }
         } catch(e) {
