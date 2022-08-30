@@ -1,13 +1,33 @@
 const WebSocket = require('ws');
+require('dotenv').config()
 const {checkToken} = require('./authControl.js');
 const UserControllers = require('./controllers/user.controllers.js');
 const {deviceControllers} = require('./controllers/device.controllers.js');
 const {mqttServer, emitter} = require('./mqtt.js')
-const port = 8080;
-const wsServer = new WebSocket.Server({port: port});
+const port = process.env.PORT || 8080;
+
+
+const http = require("http");
+const express = require( "express");
+
+const app = express();
+
+const server = http.createServer(app);
+
+// const wsServer = new WebSocket.Server({port: port});
+const wsServer = new WebSocket.Server({ server });
+
+const db = require('./db');
+const exp = require('constants');
+db.query('SELECT 1+1').then(()=>{console.log('База данных подключена')}).catch('Ошибка базы данных')
 
 const WSClients = {}
+
 wsServer.on('connection', onConnect);
+
+app.get('/api/sign', async (req, res) => {
+    res.json(await UserControllers.getUser(req.query.login, req.query.password))
+})
 
 function onConnect(wsClient) {
     console.log("New client");
@@ -154,4 +174,6 @@ emitter.eventBus.on('Updated status',
 
 
 wsServer.on('listening', () => {console.log(`Сервер запущен на ${port} порту`)});
+
+server.listen(port, () => console.log("Server started"))
 mqttServer.runMQTT()
