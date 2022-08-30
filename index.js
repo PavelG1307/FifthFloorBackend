@@ -26,6 +26,7 @@ const WSClients = {}
 wsServer.on('connection', onConnect);
 
 app.get('/api/sign', async (req, res) => {
+    console.log(req)
     res.json(await UserControllers.getUser(req.query.login, req.query.password))
 })
 
