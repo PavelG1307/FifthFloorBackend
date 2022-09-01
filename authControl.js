@@ -4,20 +4,12 @@ class AuthControl {
 
     async checkToken(token) {
         if (!token) {
-            return false
+            return null
         }
         try {
-            user = jwt.verify(token, secret)
-            if (user){
-                return {
-                    id: user.id,
-                    login: user.login,
-                    role: user.role
-                }
-            }
-            return false
+            return jwt.verify(token, secret)
         } catch(e) {
-            return false
+            return null
         }
     }
 

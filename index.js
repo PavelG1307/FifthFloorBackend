@@ -1,180 +1,86 @@
-const WebSocket = require('ws');
 require('dotenv').config()
-const {checkToken} = require('./authControl.js');
-const UserControllers = require('./controllers/user.controllers.js');
-const {deviceControllers} = require('./controllers/device.controllers.js');
-const {mqttServer, emitter} = require('./mqtt.js')
-const port = process.env.PORT || 8080;
+const MQTTServer  = require('./mqtt/mqtt.js')
+const http = require("http")
+const express = require("express")
+const webSocket = require('./websoket/websoket.js')
+const authRouter = require('./routers/auth.js')
+const stationRouter = require('./routers/station.js')
+const modulesRouter = require('./routers/modules.js')
+const ringRouter = require('./routers/ring.js')
 
+const db = require('./db/db')
+db.query('SELECT 1+1').then(() => { console.log('База данных подключена') }).catch('Ошибка базы данных')
 
-const http = require("http");
-const express = require( "express");
+const port = process.env.PORT || 8080
+const app = express()
+const server = http.createServer(app)
 
-const app = express();
+const ws = new webSocket(server)
+const mqtt = new MQTTServer(ws)
+app.use(express.json({ limit: '50mb' }))
 
-const server = http.createServer(app);
-
-// const wsServer = new WebSocket.Server({port: port});
-const wsServer = new WebSocket.Server({ server });
-
-const db = require('./db');
-const exp = require('constants');
-db.query('SELECT 1+1').then(()=>{console.log('База данных подключена')}).catch('Ошибка базы данных')
-
-const WSClients = {}
-
-wsServer.on('connection', onConnect);
-
-app.get('/api/sign', async (req, res) => {
-    console.log(req)
-    res.json(await UserControllers.getUser(req.query.login, req.query.password))
+app.use(function (req, res, next) {
+  req.mqtt = mqtt
+  next()
 })
 
-function onConnect(wsClient) {
-    console.log("New client");
-
-    wsClient.on('message', async function(rawMessage) {
-        const message = JSON.parse(rawMessage)
-        const result = await answer(wsClient, message)
-        if (result) {
-            if (result.id) {
-                wsClient.id = result.id
-                console.log('ID: ', wsClient.id)
-                if (WSClients[user.id]) {
-                    WSClients[result.id].push(this)
-                } else {
-                    WSClients[result.id] = [this]
-                }
-                console.log('Клиентов у пользвателя: ', WSClients[result.id].length)
-            }
-
-            wsClient.send(JSON.stringify(result.data))
-        }
-    })
-
-    wsClient.on('close', function(ws) {
-        console.log(ws)
-        console.log(wsClient.id)
-        // console.log(wsClient.id)
-        console.log('Пользователь отключился');
-        if (this.id) {
-            i = WSClients[this.id].indexOf(this);
-            if(i >= 0) {
-                WSClients[this.id].splice(i,1);
-            }
-            console.log('Клиентов у пользвателя: ', WSClients[this.id].length)
-        }
-    })
-}
-
-
-async function answer(ws, message) {
-    const {token, type} = message
-    user = await checkToken(token)
-    let data
-    let id
-    if (!user && type != "SIGN IN" && type != "REGISTRATION") {
-        data = {error: "Token invalid"}
-    } else {
-        switch (type) {
-            case "CONNECTED":
-                id = user.id
-                data = await deviceControllers.getStatus(user.id)
-                break
-
-            case "SIGN IN":
-                data = await UserControllers.getUser(message.login, message.password)
-                break
-
-            case "REGISTRATION":
-                data = await UserControllers.createUser(message.login, message.password, message.email, message.phone_number)
-                break
-
-            case "GET STATUS":
-                data = await deviceControllers.getStatus(user.id)
-                break
-
-            case "ADD STATION":
-                data = await deviceControllers.addStation(user.id, message.key)
-                break
-
-            case "SET BRIGHTNESS":
-                data = await deviceControllers.setBrightness(user.id, message.brightness)
-                break
-
-            case "SET SPEAKER":
-                data = await deviceControllers.setSpeaker(user.id, message.volume)
-                break
-
-            case "SET MODULE":
-                data = await deviceControllers.setModule(user.id, message.module, message.state)
-                break
-
-            case "UPDATE MODULE":
-                data = await deviceControllers.updateModuleName(message.module, message.name, message.location)
-                break
-            case "DELETE MODULE":
-                data = await deviceControllers.deleteModule(message.module)
-                break
-            
-            case "EDIT RING":
-                data = await deviceControllers.editRing(user.id, message.id, message.time, message.active, message.sunrise, message.music)
-                break
-
-            case "SET ACTIVE RING":
-                data = await deviceControllers.setActiveRing(message.id, user.id, message.active)
-                break
-            
-            case "SET VISIBLE RING":
-                data = await deviceControllers.setVisibleRing(message.id, user.id, message.visible)
-
-            case "GUARD":
-                data = await deviceControllers.changeGuard(user.id, message.value)
-                break
-
-            default:
-                data = {error: "Bad request"}
-                break
-        }
-        return {id, data}
-    }
-}
-
-
-emitter.eventBus.on('Updated guard', 
-    async function (id, state){
-        try {
-            const data = JSON.stringify({
-                type: "guard",
-                message: "Success",
-                state: state
-            })
-
-            WSClients[id].forEach((ws) => {
-                ws.send(data)
-            })
-        } catch (e) {
-            console.log(e)
-        }
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', '*')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  res.header('X-Robots-Tag', 'noindex')
+  next()
 })
 
-emitter.eventBus.on('Updated status', 
-    async function (id){
-        try {
-            if (WSClients[user.id]) {
-            const data = JSON.stringify(await deviceControllers.getStatus(id))
-            WSClients[id].forEach((ws) => {
-                ws.send(data)
-            })
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    }
-)
+app.use('/api/auth', authRouter)
+app.use('/api/station', stationRouter)
+app.use('/api/module', modulesRouter)
+app.use('/api/ring', ringRouter)
+app.use((error, req, res, next) => {
+  console.log(error)
+  console.log(error.message)
+  res.status(400)
+  res.json({
+    success: false,
+    message: req.app.get('env') === 'development' ? error.message : 'Неизвестная ошибка, обратитесь к администратору i@dxlebedev.ru'
+  })
+})
 
 
-wsServer.on('listening', () => {console.log(`Сервер запущен на ${port} порту`)});
 
-server.listen(port, () => console.log("Server started"))
-mqttServer.runMQTT()
+
+
+
+// emitter.eventBus.on('Updated guard',
+//   async function (id, state) {
+//     try {
+//       const data = JSON.stringify({
+//         type: "guard",
+//         message: "Success",
+//         state: state
+//       })
+
+//       WSClients[id].forEach((ws) => {
+//         ws.send(data)
+//       })
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   })
+
+// emitter.eventBus.on('Updated status',
+//   async function (id) {
+//     try {
+//       if (WSClients[user.id]) {
+//         const data = JSON.stringify(await deviceControllers.getStatus(id))
+//         WSClients[id].forEach((ws) => {
+//           ws.send(data)
+//         })
+//       }
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   }
+// )
+
+server.listen(port, () => console.log(`Сервер запущен на ${port} порту`))
