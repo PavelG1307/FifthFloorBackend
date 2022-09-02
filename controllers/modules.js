@@ -40,7 +40,6 @@ class ModuleControllers {
         "INSERT INTO modules (location, last_value, time, station_id, user_id, type, id_module, name) VALUES ($1,$2,NOW(),$3,$4,$5,$6,$7) RETURNING *",
         [location, value, station_id, user_id, type, id_module, name_module]
       );
-      console.log(module);
       return module;
     } catch (e) {
       console.log(e);
@@ -65,16 +64,18 @@ class ModuleControllers {
     }
   }
   async updateName(req, res) {
-    const { idModule, name_module, location } = req.body
+    const { id, name, location } = req.body
+    console.log({ id, name, location })
     try {
       const query = `
       UPDATE modules
       SET
-        name = ${name_module},
-        location = ${location}
-      WHERE id_module = ${idModule}`
-      await db.query(query)
-      res.json({ success: true })
+        name = '${name}',
+        location = '${location}'
+      WHERE id_module = ${id}`
+      console.log(query)
+      const resp = await db.query(query).catch(()=>{})
+      res.json({ success: !!resp })
     } catch (e) {
       console.log(e);
       res.json({ success: false })
@@ -126,7 +127,25 @@ class ModuleControllers {
       console.log(e);
     }
   }
-  
+  async getOne(req, res) {
+    const id = req.params.id
+    if (!id) {
+      res.json('Bad request')
+      return
+    }
+    const query = `
+    SELECT m.location, m.last_value, m.name, m.station_id, m.id_module, m.type, s.user_id
+    FROM modules as m
+    JOIN stations as s on m.station_id = s.id
+    WHERE m.id_module = ${req.params.id} and s.user_id = ${req.user.id}
+    `
+    const resp = await db.query(query).catch(()=>{})
+    if (resp && resp.rows[0]) {
+      res.json({success: true, data: resp.rows[0]})
+    } else {
+      res.json({ success: false, message: 'Модуль не найден'})
+    }
+  }
 }
 
 module.exports = new ModuleControllers();

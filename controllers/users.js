@@ -28,16 +28,17 @@ class UserController {
   }
 
   async sign(req, res) {
-    console.log(req.user)
+    console.log(req.query)
     try {
       const { login, password } = req.query
       const thisUser = (await db.query(`SELECT * FROM users WHERE login = $1`, [login.toLowerCase()])).rows[0]
       if (thisUser) {
-        const Validpassword = bcrypt.compareSync(password, thisUser.password)
-        if (Validpassword) {
+        const isValidPassword = bcrypt.compareSync(password, thisUser.password)
+        if (isValidPassword) {
           delete thisUser.password
-          const token = await jwt.generateToken(thisUser)
-          res.json({ success: true, token, data: thisUser, newUser: false })
+          const token = await jwt.generateToken(thisUser).catch(()=>{})
+          if(token) res.json({ success: true, token, data: thisUser, newUser: false })
+          else res.json({ success: false, message: 'Пользователь не найден' })
           return
         }
       }

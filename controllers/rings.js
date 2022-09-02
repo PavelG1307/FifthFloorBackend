@@ -1,5 +1,6 @@
 const db = require('../db/db')
 const utils = require('./utils/utils.js')
+const Rings = require('./methods/Rings')
 
 class RingControllers {
 
@@ -59,8 +60,7 @@ class RingControllers {
     }
   }
   async getRings(req, res) {
-    const visible = req.body.visible ? 'and visible' : ''
-    const rings = (await db.query(`SELECT * FROM rings WHERE user_id = ${req.user.id} ${visible} ORDER BY id`)).rows
+    const rings = await Rings.getRings(req.user.id, req.query.visible)
     res.json({success: !!rings, data: rings})
   }
 

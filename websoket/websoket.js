@@ -16,20 +16,21 @@ class webSocket {
 
   onClose(wsClient) {
     console.log("Пользователь отключился")
-    if (this.id) {
-      const i = this.wsClients[this.id].indexOf(wsClient)
+    if (wsClient.id) {
+      const i = this.wsClients[wsClient.id].indexOf(wsClient)
       if (i >= 0) {
-        this.wsClients[this.id].splice(i, 1)
+        this.wsClients[wsClient.id].splice(i, 1)
       }
-      console.log("Клиентов у пользователя: ", wsClients[this.id].length)
+      console.log("Клиентов у пользователя: ", this.wsClients[wsClient.id].length)
     }
   }
 
   async onMessage(rawMessage, wsClient) {
     const message = JSON.parse(rawMessage)
     if ("token" in message) {
-      const user = await checkToken(message.token)
-      if (user) {
+      const check = await checkToken(message.token)
+      if (check && check.id) {
+        const user = check.id
         console.log(`Новое подключение: ${user.id}`)
         wsClient.id = user.id
         if (this.wsClients[user.id]) {
@@ -37,12 +38,11 @@ class webSocket {
         } else {
           this.wsClients[user.id] = [wsClient]
         }
-        console.log("Устройств у пользователя: ", this.wsClients[user.id].length)
-
+        console.log("Клиентов у пользователя: ", this.wsClients[wsClient.id].length)
         wsClient.send(JSON.stringify({ success: true }))
       } else {
         wsClient.send(
-          JSON.stringify({ success: false, mesage: "Токен не верен" })
+          JSON.stringify({ success: false, message: "Токен не верен" })
         )
       }
     }
