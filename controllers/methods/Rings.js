@@ -19,21 +19,25 @@ module.exports.changeActive = async (id, state, user, mqtt) => {
       if (!(updatedRing && updatedRing.rows[0])) {
         return { success: false }
       }
-      const activeRings = await db.query(`SELECT active, id, time, sunrise, music FROM rings WHERE user_id = ${user} ORDER BY id`).catch(()=>{})
-      let reqm = ''
-      let count = 0
-      for (const i in activeRings.rows) {
-        const ring = activeRings.rows[i]
-        if (ring.active) {
-          count++
-          reqm += i
-          reqm += ("0000" + ring.time).slice(-4)
-          reqm += ring.music
-          reqm += ring.sunrise ? "1" : "0"
-        }
+      return { success: await sendRings(mqtt, user), state: updatedRing.rows[0].active }
+}
+
+module.exports.sendRings = async (mqtt, user) => {
+    const activeRings = await db.query(`SELECT active, id, time, sunrise, music FROM rings WHERE user_id = ${user} ORDER BY id`).catch(()=>{})
+    let reqm = ''
+    let count = 0
+    for (const i in activeRings.rows) {
+      const ring = activeRings.rows[i]
+      if (ring.active) {
+        count++
+        reqm += i
+        reqm += ("0000" + ring.time).slice(-4)
+        reqm += ring.music
+        reqm += ring.sunrise ? "1" : "0"
       }
-      reqm = "rng" + count + reqm
-      const stationId = await utils.getStationIdFromUserId(user)
-      const success = await mqtt.send(stationId, 'req', reqm)
-      return { success, state: updatedRing.rows[0].active }
+    }
+    reqm = "rng" + count + reqm
+    const stationId = await utils.getStationIdFromUserId(user)
+    const success = await mqtt.send(stationId, 'req', reqm)
+    return success
 }

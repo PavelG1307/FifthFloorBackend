@@ -5,7 +5,6 @@ const getUserIdFromStationId = async(id) => {
 }
 
 const getStationIdFromUserId = async (id) => {
-    console.log(id)
     return (await db.query(`SELECT id FROM stations WHERE user_id = $1`, [id])).rows[0].id
 }
 

@@ -77,8 +77,6 @@ class DeviceControllers {
         FROM updated
         ORDER BY id ASC;`
       )).rows
-      console.log(ringsId)
-      console.log(status.rings)
       for (const i in status.rings) {
         const id = ringsId[status.rings[i].id - 1].id
         const { time, sunrise, music } = status.rings[i]

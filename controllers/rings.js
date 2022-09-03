@@ -10,8 +10,9 @@ class RingControllers {
     try {
       const query = `UPDATE rings SET active = ${active}, time=${time}, sunrise = ${sunrise}, music = ${music}, visible = true WHERE id = ${id} and user_id = ${idUser} RETURNING *;`
       const updatedRing = await db.query(query).catch(()=>{})
+      const successMqtt = await Rings.sendRings(req.mqtt, user)
       res.json({
-        success: !!updatedRing.rows[0],
+        success: !!updatedRing.rows[0] && successMqtt,
         message: !updatedRing.rows[0] ? 'Будильник не найден' : null,
         data: updatedRing.rows[0] || {}
       })
