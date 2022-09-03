@@ -60,7 +60,7 @@ class RingControllers {
     }
   }
   async getRings(req, res) {
-    const rings = await Rings.getRings(req.user.id, req.query.visible)
+    const rings = await Rings.getRings(req.user.id, req.query.visible, req.query.id)
     res.json({success: !!rings, data: rings})
   }
 
