@@ -19,7 +19,7 @@ module.exports.changeActive = async (id, state, user, mqtt) => {
       if (!(updatedRing && updatedRing.rows[0])) {
         return { success: false }
       }
-      return { success: await sendRings(mqtt, user), state: updatedRing.rows[0].active }
+      return { success: await this.sendRings(mqtt, user), state: updatedRing.rows[0].active }
 }
 
 module.exports.sendRings = async (mqtt, user) => {
