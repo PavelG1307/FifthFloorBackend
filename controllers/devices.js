@@ -7,13 +7,13 @@ class DeviceControllers {
 
   async getStatus(req, res) {
     const data = await Devices.getStatus(req.user.id)
-    res.json({success: !!data, message: data ? undefined : 'Станция не найдены', data})
+    res.json({success: !!data, message: data ? undefined : 'Станция не найдена', data})
   }
   async addStation(req, res) {
-    const { secretKey } = req.body
+    const { key } = req.body
     const idUser = req.user.id
     try {
-      const station = (await db.query(`INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, $1, false, 0, $2, NOW()) RETURNING *`, [idUser, secretKey])).rows
+      const station = (await db.query(`INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, $1, false, 0, $2, NOW()) RETURNING *`, [idUser, key])).rows
       if (station[0]) {
         for (let i = 0; i < 5; i++) {
           await db.query(`INSERT INTO rings (name, time, active, visible, sunrise, music, user_id, station_id) VALUES ('ring', 0, false, false, true, 0, $1, $2)`, [idUser, station[0].id])
