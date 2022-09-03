@@ -1,0 +1,11 @@
+PORT=8080
+dbHost='81.177.165.203'
+dbPort=5432
+dbUser='postgres'
+dbPassword='root'
+dbName='ff'
+mqttPort=1883
+mqttName='Server'
+mqttUsername='fifthfloor'
+mqttPassword='root'
+mqttHost='81.177.165.203'

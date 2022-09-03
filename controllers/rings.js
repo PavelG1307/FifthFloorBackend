@@ -6,17 +6,21 @@ class RingControllers {
 
   async editRing(req, res) {
     const { id, time, active, sunrise, music } = req.body
-    const idUser = req.user.id
+    const user = req.user.id
     try {
-      const query = `UPDATE rings SET active = ${active}, time=${time}, sunrise = ${sunrise}, music = ${music}, visible = true WHERE id = ${id} and user_id = ${idUser} RETURNING *;`
+      const query = `UPDATE rings SET active = ${active}, time=${time}, sunrise = ${sunrise}, music = ${music}, visible = true WHERE id = ${id} and user_id = ${user} RETURNING *;`
       const updatedRing = await db.query(query).catch(()=>{})
-      const successMqtt = await Rings.sendRings(req.mqtt, user)
+      let successMqtt
+      if (updatedRing.rows[0]) {
+        successMqtt = await Rings.sendRings(req.mqtt, user)
+      }
       res.json({
-        success: !!updatedRing.rows[0] && successMqtt,
-        message: !updatedRing.rows[0] ? 'Будильник не найден' : null,
+        success: successMqtt,
+        message: !successMqtt ? 'Будильник не найден' : null,
         data: updatedRing.rows[0] || {}
       })
     } catch (e) {
+      console.log(e)
       res.json({
         success: false,
         message: 'Будильник не найден'
