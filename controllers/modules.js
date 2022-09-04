@@ -1,6 +1,7 @@
 const db = require("../db/db")
 const utils = require('./utils/utils.js')
 const Devices = require('./methods/Devices')
+const Modules = require('./methods/Modules')
 
 class ModuleControllers {
 
@@ -73,7 +74,6 @@ class ModuleControllers {
         name = '${name}',
         location = '${location}'
       WHERE id_module = ${id}`
-      console.log(query)
       const resp = await db.query(query).catch(()=>{})
       res.json({ success: !!resp })
     } catch (e) {
@@ -127,21 +127,38 @@ class ModuleControllers {
       console.log(e);
     }
   }
-  async getOne(req, res) {
-    const id = req.params.id
-    if (!id) {
-      res.json('Bad request')
-      return
-    }
+  async get(req, res) {
+    const id = req.user.id
     const query = `
-    SELECT m.location, m.last_value, m.name, m.station_id, m.id_module, m.type, s.user_id
-    FROM modules as m
-    JOIN stations as s on m.station_id = s.id
-    WHERE m.id_module = ${req.params.id} and s.user_id = ${req.user.id}
+      SELECT location, last_value, m.name, m.time,
+        id_module, t.name as type,  t.image, t.units, t.value_type, t.type as mode
+      FROM modules AS m
+      JOIN stations as s on m.station_id = s.id
+      JOIN module_types AS t ON m.type = t.type_id
+      WHERE s.user_id = ${req.user.id}
     `
     const resp = await db.query(query).catch(()=>{})
+    
+    if (resp && resp.rows) {
+      res.json({ success: true, data: resp.rows })
+    } else {
+      res.json({ success: false, message: 'Модуль не найден'})
+    }
+  }
+  
+  async getOne(req, res) {
+    const query = `
+    SELECT location, last_value, m.name, m.time,
+      id_module, t.name as type,  t.image, t.units, t.value_type, t.type as mode
+    FROM modules AS m
+    JOIN stations as s on m.station_id = s.id
+    JOIN module_types AS t ON m.type = t.type_id
+    WHERE m.id_module = ${req.params.id} and s.user_id = ${req.user.id}`
+    const resp = await db.query(query).catch(()=>{})
+    console.log(query)
     if (resp && resp.rows[0]) {
-      res.json({success: true, data: resp.rows[0]})
+      const actions = await Modules.getActions(req.user.id)
+      res.json({success: true, data: resp.rows[0], actions})
     } else {
       res.json({ success: false, message: 'Модуль не найден'})
     }

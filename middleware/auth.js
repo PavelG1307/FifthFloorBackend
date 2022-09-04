@@ -6,7 +6,7 @@ const auth = {
 		const token = req.headers.authorization.split('Bearer ')
 		const check = await checkToken(token[1] ? token[1] : '')
 		if (check) {
-			req.user = check.id
+			req.user = check.id || check 
 			next()
 		} else {
 			res.json({ success: false, message: 'Авторизируйтесь!' })

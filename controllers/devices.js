@@ -11,12 +11,13 @@ class DeviceControllers {
   }
   async addStation(req, res) {
     const { key } = req.body
-    const idUser = req.user.id
+    const userId = req.user.id
     try {
-      const station = (await db.query(`INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, $1, false, 0, $2, NOW()) RETURNING *`, [idUser, key])).rows
+      const query = `INSERT INTO stations (time, battery, lamp, user_id, guard, speaker, secret_key, last_update) VALUES (0, 0, 0, ${userId}, false, 0, '${key}', NOW()) RETURNING *`
+      const station = (await db.query(query)).rows
       if (station[0]) {
         for (let i = 0; i < 5; i++) {
-          await db.query(`INSERT INTO rings (name, time, active, visible, sunrise, music, user_id, station_id) VALUES ('ring', 0, false, false, true, 0, $1, $2)`, [idUser, station[0].id])
+          await db.query(`INSERT INTO rings (name, time, active, visible, sunrise, music, user_id, station_id) VALUES ('ring', 0, false, false, true, 0, $1, $2)`, [userId, station[0].id])
         }
         console.log(station[0])
         res.json({ success: true, data: station[0] })
@@ -29,23 +30,23 @@ class DeviceControllers {
     }
   }
   async setBrightness(req, res) {
-    const idUser = req.user.id
+    const userId = req.user.id
     const brightness = req.body.brightness || 0
-    const stationId = await utils.getStationIdFromUserId(idUser)
+    const stationId = await utils.getStationIdFromUserId(userId)
     const success = await req.mqtt.send(stationId, 'remote', `BRT ${brightness}`)
     res.json({success})
   }
   async setSpeaker(req, res) {
-    const idUser = req.user.id
+    const userId = req.user.id
     const volume = req.body.volume || 0
-    const stationId = await utils.getStationIdFromUserId(idUser)
+    const stationId = await utils.getStationIdFromUserId(userId)
     const success = await req.mqtt.send(stationId, 'remote', `SPQ ${volume}`)
     res.json({ success })
   }
   async changeGuard(req, res) {
-    const idUser = req.user.id
+    const userId = req.user.id
     const state = req.body.state ? 1 : 0
-    const stationId = await utils.getStationIdFromUserId(idUser)
+    const stationId = await utils.getStationIdFromUserId(userId)
     const success = await req.mqtt.send(stationId, 'remote', `GRD ${state}`)
     res.json({success})
   }
