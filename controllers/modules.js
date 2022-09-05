@@ -67,9 +67,9 @@ class ModuleControllers {
   async updateName(req, res) {
     const { id, name, location, actions } = req.body
     try {
-      let acts = 'ARRAY['
-      if (actions[0]) acts += "'" + actions.map(el => JSON.stringify(el)).join("'::json, '") + "'::json"
-      acts += "]"
+      let acts
+      if (actions[0]) acts = "ARRAY['" + actions.map(el => JSON.stringify(el)).join("'::json, '") + "'::json]"
+      else acts = 'null'
       const query = `
       UPDATE modules
       SET
