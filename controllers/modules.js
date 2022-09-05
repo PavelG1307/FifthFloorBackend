@@ -48,10 +48,10 @@ class ModuleControllers {
     }
   }
   async set(req, res) {
-    const { idModule, state } = req.body
+    const { id, state } = req.body
     const idUser = req.user.id
-    const stationId = await this.getStationIdFromUserId(idUser);
-    const success = await req.mqtt.send(stationId, 'remote', `MDL ${idModule} ${state}`)
+    const stationId = await utils.getStationIdFromUserId(idUser);
+    const success = await req.mqtt.send(stationId, 'remote', `MDL ${id} ${state}`)
     res.json({ success })
   }
   async delete(req, res) {
