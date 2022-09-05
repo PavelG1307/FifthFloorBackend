@@ -65,16 +65,20 @@ class ModuleControllers {
     }
   }
   async updateName(req, res) {
-    const { id, name, location } = req.body
-    console.log({ id, name, location })
+    const { id, name, location, actions } = req.body
     try {
+      let acts = 'ARRAY['
+      if (actions[0]) acts += "'" + actions.map(el => JSON.stringify(el)).join("'::json, '") + "'::json"
+      acts += "]"
       const query = `
       UPDATE modules
       SET
         name = '${name}',
-        location = '${location}'
+        location = '${location}',
+        actions = ${acts}
       WHERE id_module = ${id}`
-      const resp = await db.query(query).catch(()=>{})
+      console.log(query)
+      const resp = await db.query(query).catch(e=>{console.log(e)})
       res.json({ success: !!resp })
     } catch (e) {
       console.log(e);
@@ -148,14 +152,13 @@ class ModuleControllers {
   
   async getOne(req, res) {
     const query = `
-    SELECT location, last_value, m.name, m.time,
+    SELECT location, last_value, m.name, m.time, m.actions,
       id_module, t.name as type,  t.image, t.units, t.value_type, t.type as mode
     FROM modules AS m
     JOIN stations as s on m.station_id = s.id
     JOIN module_types AS t ON m.type = t.type_id
     WHERE m.id_module = ${req.params.id} and s.user_id = ${req.user.id}`
     const resp = await db.query(query).catch(()=>{})
-    console.log(query)
     if (resp && resp.rows[0]) {
       const actions = await Modules.getActions(req.user.id)
       res.json({success: true, data: resp.rows[0], actions})
