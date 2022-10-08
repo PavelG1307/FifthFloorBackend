@@ -50,7 +50,7 @@ class ModuleControllers {
   async set(req, res) {
     const { id, state } = req.body
     const idUser = req.user.id
-    const stationId = await utils.getStationIdFromUserId(idUser);
+    const stationId = await utils.getStationIdFromUserId(idUser)
     const success = await req.mqtt.send(stationId, 'remote', `MDL ${id} ${state}`)
     res.json({ success })
   }
@@ -68,7 +68,19 @@ class ModuleControllers {
     const { id, name, location, actions } = req.body
     try {
       let acts
-      if (actions[0]) acts = "ARRAY['" + actions.map(el => JSON.stringify(el)).join("'::json, '") + "'::json]"
+      if (actions[0]) {
+        acts = "ARRAY['" + actions.map(el => JSON.stringify(el)).join("'::json, '") + "'::json]"
+        let reqMqtt = 'rules'
+        for (const i in actions) {
+          reqMqtt += ('000' + id).slice(-4)
+          reqMqtt += ( '0' + actions[i].condition).slice(-1)
+          reqMqtt += ('000' + actions[i].value).slice(-4)
+          reqMqtt += ('000000' + actions[i].target_module).slice(-6)
+        }
+        const idUser = req.user.id
+        const stationId = await utils.getStationIdFromUserId(idUser);
+        const success = await req.mqtt.send(stationId, 'remote', reqMqtt)
+      }
       else acts = 'null'
       const query = `
       UPDATE modules
@@ -77,7 +89,6 @@ class ModuleControllers {
         location = '${location}',
         actions = ${acts}
       WHERE id_module = ${id}`
-      console.log(query)
       const resp = await db.query(query).catch(e=>{console.log(e)})
       res.json({ success: !!resp })
     } catch (e) {
@@ -111,14 +122,12 @@ class ModuleControllers {
                       ${ name ? `, name = '${name}'` : ''}
                       ${ location ? `, location = '${location}'` : ''}
                     `
-                    console.log(query)
       const id = await db.query(query)
     } catch (e) {
       console.log(e);
     }
   }
   async updateModules(stationId, statusMessage) {
-    console.log(statusMessage);
     for (let i in statusMessage) {
       const { id, type, value, timeUpdate } = statusMessage[i];
       await this.updateModule(id, type, value, timeUpdate, stationId);
@@ -149,7 +158,6 @@ class ModuleControllers {
       res.json({ success: false, message: 'Модуль не найден'})
     }
   }
-  
   async getOne(req, res) {
     const query = `
     SELECT location, last_value, m.name, m.time, m.actions,

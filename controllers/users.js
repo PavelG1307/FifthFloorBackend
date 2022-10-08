@@ -7,7 +7,6 @@ class UserController {
   async registration(req, res) {
     try {
       const { login, password, email, phone } = req.body
-      console.log({ login, password, email, phone })
       if (!(login && password && email && phone)) {
         res.json({ success: false, message: 'Не все данные' })
         return

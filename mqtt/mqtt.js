@@ -48,7 +48,7 @@ class MQTTServer {
     const endpoint = topic.split('/')[1]
 
     if (endpoint === 'stt') {
-      const status = await parser.status(id, payload.toString())
+      const status = await parser.status(id, decrypt(payload.toString()))
       if (status) this.ws.send(status, status.userId)
       return
     } else if (endpoint === 'sens') {
@@ -70,5 +70,32 @@ class MQTTServer {
     return success.connected
   }
 }
+
+function xorCrypt (str, key) {
+  let output = ''
+  console.log(key)
+  for (let i = 0; i < str.length; ++i) {
+    output += String(key ^ str.charCodeAt(i))
+    output += '.'
+  }
+  return output
+}
+
+const crypt = (data) => {
+  const keyr = 88
+  return xorCrypt(data, keyr) + keyr
+}
+
+
+const decrypt = (data) => {
+  const splitData = data.split('.')
+  let output = ""
+  const key = splitData.at(-1)
+  for (let i = 0; i < splitData.length - 1; i++) {
+    output += String.fromCharCode(key ^ splitData[i])
+  }
+  return output
+}
+
 
 module.exports = MQTTServer

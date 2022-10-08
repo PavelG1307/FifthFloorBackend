@@ -38,6 +38,6 @@ module.exports.sendRings = async (mqtt, user) => {
     }
     reqm = "rng" + count + reqm
     const stationId = await utils.getStationIdFromUserId(user)
-    const success = await mqtt.send(stationId, 'req', reqm)
+    const success = await mqtt.send(stationId, 'remote', reqm)
     return success
 }
