@@ -12,12 +12,9 @@ class MQTTRouters {
     if (!(await this.check_key(keyStations))) {
       return
     }
-    const status = { id: id }
-    status.brightness = parseStatus[1]
+    
     const rings = []
-    if (parseStatus[2] == "0") {
-      status.rings = {}
-    } else {
+    if (parseStatus[2] !== "0") {
       for (let i in parseStatus[2].split(',')) {
         const ring = {
           id: parseStatus[2].split(',')[i],
@@ -27,22 +24,26 @@ class MQTTRouters {
         }
         rings.push(ring)
       }
-      status.rings = rings
     }
-    status.nightlight = {
-      active: (parseStatus[6] === 'true'),
-      timeOn: parseStatus[7].split(',')[0],
-      timeOff: parseStatus[7].split(',')[1]
+    const status = {
+      id: id,
+      brightness: parseStatus[1],
+      nightlight: {
+        active: (parseStatus[6] === 'true'),
+        timeOn: parseStatus[7].split(',')[0],
+        timeOff: parseStatus[7].split(',')[1]
+      },
+      speaker: {
+        active: (parseStatus[8] === 'true'),
+        volume: parseStatus[9]
+      },
+      rings,
+      voltage: parseStatus[10],
+      mode: parseStatus[11],
+      time: parseStatus[12],
+      guard: parseStatus[13] === 'true'
     }
-    status.speaker = {
-      active: (parseStatus[8] === 'true'),
-      volume: parseStatus[9]
-    }
-    status.voltage = parseStatus[10]
-    status.time = parseStatus[12]
-    status.guard = (parseStatus[13] === 'true')
     return await deviceControllers.setStatus(status)
-
   }
 
   async moduleMessage(idStation, statusMessage) {

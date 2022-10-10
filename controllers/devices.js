@@ -31,10 +31,15 @@ class DeviceControllers {
   }
   async setBrightness(req, res) {
     const userId = req.user.id
-    const brightness = req.body.brightness || 0
+    const { brightness, mode } = req.body
     const stationId = await utils.getStationIdFromUserId(userId)
-    const success = await req.mqtt.send(stationId, 'remote', `BRT ${brightness}`)
-    res.json({success})
+    const success = await req.mqtt.send(stationId, 'remote', mode ? `MODE${mode}` : `BRT${brightness || 0}`)
+    const query = `
+        UPDATE stations
+        SET ${mode ? `mode = ${mode}` : `brightness = ${brightness}`}
+        WHERE id = ${stationId};`
+    const successDB = await db.query(query).catch(() => {})
+    res.json({success: success && successDB})
   }
   async setSpeaker(req, res) {
     const userId = req.user.id
@@ -55,7 +60,7 @@ class DeviceControllers {
   }
   async setStatus(status) {
     try {
-      const { time, voltage, brightness, guard, speaker, id} = status
+      const { time, voltage, brightness, guard, speaker, id, mode} = status
       const query = `
         UPDATE stations
         SET time = ${time},
@@ -63,7 +68,8 @@ class DeviceControllers {
             lamp = ${brightness},
             last_update = NOW(),
             guard = ${guard},
-            speaker = ${speaker.volume}
+            speaker = ${speaker.volume},
+            mode = ${mode}
         WHERE id = ${id}
         RETURNING user_id;`
       const userId = (await db.query(query)).rows[0].user_id

@@ -29,6 +29,7 @@ app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Headers', '*')
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
   res.header('X-Robots-Tag', 'noindex')
+  if(req.method !== 'OPTIONS') console.log(`${req.method} ${req.hostname}${req.originalUrl}`)
   next()
 })
 
