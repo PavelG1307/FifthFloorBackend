@@ -36,9 +36,11 @@ class DeviceControllers {
     const success = await req.mqtt.send(stationId, 'remote', mode ? `MODE${mode}` : `BRT${brightness || 0}`)
     const query = `
         UPDATE stations
-        SET ${mode ? `mode = ${mode}` : `brightness = ${brightness}`}
+        SET ${mode ? `mode = ${mode}` : `lamp = ${brightness}`}
         WHERE id = ${stationId};`
+        console.log(query)
     const successDB = await db.query(query).catch(() => {})
+    console.log(successDB)
     res.json({success: success && successDB})
   }
   async setSpeaker(req, res) {
