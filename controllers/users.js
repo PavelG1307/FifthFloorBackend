@@ -49,9 +49,8 @@ class UserController {
         }
         if (isValidPassword) {
           delete thisUser.password
-          const token = await jwt.generateToken(thisUser).catch(()=>{})
-          if(token) res.json({ success: true, token, data: thisUser, newUser: false })
-          else res.json({ success: false, message: 'Пользователь не найден' })
+          const token = await jwt.generateToken(thisUser)
+          if (token) res.json({ success: true, token, data: thisUser, newUser: false })
           return
         }
       }

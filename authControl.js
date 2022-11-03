@@ -17,7 +17,7 @@ class AuthControl {
             login,
             role
         }
-        const token = await jwt.sign(payload, secret, {expiresIn: "72h"})
+        const token = await jwt.sign(payload, process.env.secretKey, {expiresIn: "72h"})
         return token
     }
 }
