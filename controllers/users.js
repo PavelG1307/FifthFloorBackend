@@ -15,7 +15,10 @@ class UserController {
       const hashPassword = bcrypt.hashSync(password, 7)
       const role = 'user'
       if (await CheckLogin(login)) {
-        const newUser = (await db.query(`INSERT INTO users (login,password,role,email,phonenumber) VALUES ($1,$2,$3,$4,$5) RETURNING *`, [login.toLowerCase(), hashPassword, role, email, phone])).rows[0]
+        const code = 1111
+        const newUser = (await db.query(`
+        INSERT INTO users (login, password, role, email, phonenumber, code)
+        VALUES ('${login.toLowerCase()}','${hashPassword}','${role}','${email}','${phone}', ${code}) RETURNING *`)).rows[0]
         const token = await jwt.generateToken(newUser.id, newUser.login, newUser.role)
         res.json({ success: true, token, data: newUser, newUser: true })
       } else {
@@ -30,10 +33,20 @@ class UserController {
   async sign(req, res) {
     console.log(req.query)
     try {
-      const { login, password } = req.query
-      const thisUser = (await db.query(`SELECT * FROM users WHERE login = $1`, [login.toLowerCase()])).rows[0]
+      const { login, password, code } = req.query
+      if (!login) {
+        res.json({ success:false })
+        return
+      }
+      const thisUser = (await db.query(`SELECT * FROM users WHERE login = '${login.toLowerCase()}'`)).rows[0]
       if (thisUser) {
-        const isValidPassword = bcrypt.compareSync(password, thisUser.password)
+        let isValidPassword = false
+        if (code) {
+          console.log(thisUser.code);
+          isValidPassword = Number(code) === thisUser.code
+        } else {
+          isValidPassword = bcrypt.compareSync(password, thisUser.password)
+        }
         if (isValidPassword) {
           delete thisUser.password
           const token = await jwt.generateToken(thisUser).catch(()=>{})
@@ -56,6 +69,12 @@ class UserController {
   }
   async deleteUser(id) {
 
+  }
+
+  async checkCode(req, res) {
+    if (req.code = '1111') {
+
+    }
   }
 }
 

@@ -113,6 +113,25 @@ class DeviceControllers {
     return { success: !!resp, guard: !!resp ? status : undefined }
   }
 
+  async connect(key) {
+    const query = `SELECT id FROM stations WHERE secret_key = '${key}' AND NOT activated`
+    const ids = await db.query(query).catch((e) => { console.log(e) })
+    if (!ids?.rows[0]) return null
+    const id = ids?.rows[0].id
+    const queryActivate = `UPDATE stations SET activated = true WHERE id = ${id}`
+    const success = await db.query(queryActivate).catch((e) => { console.log(e) })
+    return success ? { topic: key, id } : null
+  }
+
+  async getKey(req, res) {
+    const key = Math.random().toString(32).substring(2, 7)
+    const query = `
+    INSERT INTO stations (secret_key, user_id, last_update)
+    VALUES
+    ('${key}', ${req.user.id}, NOW())`
+    const success = await db.query(query).catch((e) => { console.log(e) })
+    res.json({ success: !!success, data: success ? {key} : null})
+  }
 }
 
 module.exports = new DeviceControllers()

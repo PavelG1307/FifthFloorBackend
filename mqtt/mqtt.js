@@ -24,6 +24,7 @@ class MQTTServer {
 
     this.client.on('connect', () => {
       console.log('Подключение с MQTT сервером установленно')
+      this.client.subscribe(['common'], () => {})
       const connectTopic = (ids) => {
         const subtopic = ['/stt', '/sens', '/guard']
         for (let j in subtopic) {
@@ -43,10 +44,13 @@ class MQTTServer {
 
 
   async onMessage(topic, payload) {
-
+    if (topic === 'common') {
+      const data = await parser.newStation(payload.toString())
+      if (data) this.send(null, data.topic, data.id.toString())
+      return
+    }
     const id = topic.split('/')[0]
     const endpoint = topic.split('/')[1]
-
     if (endpoint === 'stt') {
       const status = await parser.status(id, decrypt(payload.toString()))
       if (status) this.ws.send(status, status.userId)
@@ -64,7 +68,8 @@ class MQTTServer {
   }
 
   async send(idStation, topic, message) {
-    const success = await this.client.publish(`${idStation}/${topic}`, message, { qos: 0, retain: false }, (error) => {
+    const topicName = idStation ? `${idStation}/${topic}` : topic
+    const success = await this.client.publish(topicName, message, { qos: 0, retain: false }, (error) => {
       if (error) { console.log(error) }
     })
     return success.connected

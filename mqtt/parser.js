@@ -79,6 +79,13 @@ class MQTTRouters {
   async check_key(keyStations) {
     return true
   }
+
+  async newStation(data) {
+    const parsedData = data.split(' ')
+    if (parsedData[0] === 'CT') {
+      return deviceControllers.connect(parsedData[1])
+    }
+  }
 }
 
 module.exports = new MQTTRouters()
