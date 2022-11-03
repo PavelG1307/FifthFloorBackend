@@ -50,7 +50,7 @@ app.use(function (req, res, next) {
 })
 
 app.get('/api/test', function (req, res, next) {
-  res.json({test: true})
+  res.json({test: 'true 2'})
 })
 
 app.use('/api/auth', authRouter)
