@@ -49,6 +49,10 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.get('/api/test', function (req, res, next) {
+  res.json({test: true})
+})
+
 app.use('/api/auth', authRouter)
 app.use('/api/station', stationRouter)
 app.use('/api/module', modulesRouter)
