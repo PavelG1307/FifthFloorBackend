@@ -5,7 +5,7 @@ const moduleControllers = require('../controllers/modules')
 class MQTTRouters {
 
   async status(id, statusMessage) {
-    console.log(`Message from user: ${id}\nStatus: ${statusMessage}`)
+    console.log(`Message from station: ${id}\nStatus: ${statusMessage}`)
     const parseStatus = statusMessage.split(' ')
     const keyStations = parseStatus[0]
 
