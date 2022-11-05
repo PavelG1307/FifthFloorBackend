@@ -4,27 +4,6 @@ const Devices = require('./methods/Devices')
 const Modules = require('./methods/Modules')
 
 class ModuleControllers {
-  async getModules(id_station) {
-    const modules = (
-      await db.query(`SELECT * FROM modules WHERE station_id = $1`, [
-        id_station,
-      ])
-    ).rows;
-    if (modules[0]) {
-      modules.forEach((mod) => {
-        if (mod.type < 10) {
-          mod.active = true;
-        } else if (mod.type < 20) {
-          mod.active = mod.last_value === "0";
-        } else {
-          mod.active = mod.last_value !== "0";
-        }
-        mod.active = Date.now() - mod.time < 60000;
-      });
-      return modules;
-    }
-    return {};
-  }
   async add(
     user_id,
     station_id,
