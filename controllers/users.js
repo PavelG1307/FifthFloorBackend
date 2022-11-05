@@ -75,7 +75,7 @@ class UserController {
     }
   }
   async notification(req, res) {
-    const token = req.body
+    const token = req.body.token
     const query = `
     UPDATE users
     SET devices = array_append(devices,'${token}')
