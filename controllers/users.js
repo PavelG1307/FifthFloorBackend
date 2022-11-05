@@ -83,6 +83,11 @@ class UserController {
     const success = await db.query(query).catch((e) => console.log(e))
     res.json({ success: !!success })
   }
+  async getPushTokens(userId) {
+    const query = `SELECT devices FROM users WHERE id = ${userId}`
+    const devices = await db.query(query).catch((e) => console.log(e))
+    return devices?.rows ?  devices.rows[0].devices : []
+  }
 }
 
 async function CheckLogin(login) {

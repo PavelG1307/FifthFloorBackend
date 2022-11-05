@@ -12,6 +12,7 @@
     "url": "git+https://github.com/PavelG1307/fifth_floor_server.git"
   },
   "dependencies": {
+    "axios": "^1.1.3",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",

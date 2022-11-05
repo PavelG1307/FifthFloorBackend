@@ -67,6 +67,7 @@ class MQTTServer {
     } else if (endpoint === 'alarm') {
       const data = await parser.alarm(id, payload.toString())
       this.notification.alarm(data)
+      return
     }
     console.log('Received Message:', topic, payload.toString())
   }
