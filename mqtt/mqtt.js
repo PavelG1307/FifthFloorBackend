@@ -1,11 +1,12 @@
 const mqtt = require('mqtt')
 const parser = require('./parser.js')
 const deviceControllers = require('../controllers/devices')
-
+const Notification = require('../controllers/utils/notification')
 
 class MQTTServer {
   constructor(websocket) {
     this.ws = websocket
+    this.notification = new Notification(websocket)
     const host = process.env.NODE_ENV === 'development' ? process.env.mqttHost : 'localhost'
     const port = process.env.mqttPort || '1883'
     const clientId = process.env.mqttName || `Server`
@@ -26,10 +27,10 @@ class MQTTServer {
       console.log('Подключение с MQTT сервером установленно')
       this.client.subscribe(['common'], () => {})
       const connectTopic = (ids) => {
-        const subtopic = ['/stt', '/sens', '/guard']
+        const subtopic = ['stt', 'sens', 'guard', 'alarm']
         for (let j in subtopic) {
           for (let i in ids) {
-            const topic = ids[i] + subtopic[j]
+            const topic = ids[i] + '/' + subtopic[j]
             this.client.subscribe([topic], () => {
               // console.log(`Подписался на ${topic}`)
             })
@@ -63,6 +64,9 @@ class MQTTServer {
       const status = await parser.guard(id, payload.toString())
       if (status) this.ws.send(status, status.userId)
       return
+    } else if (endpoint === 'alarm') {
+      const data = await parser.alarm(id, payload.toString())
+      this.notification.alarm(data)
     }
     console.log('Received Message:', topic, payload.toString())
   }
@@ -78,7 +82,6 @@ class MQTTServer {
 
 function xorCrypt (str, key) {
   let output = ''
-  console.log(key)
   for (let i = 0; i < str.length; ++i) {
     output += String(key ^ str.charCodeAt(i))
     output += '.'

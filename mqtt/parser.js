@@ -1,11 +1,11 @@
 const deviceControllers = require("../controllers/devices.js")
 const moduleControllers = require('../controllers/modules')
-
+const { getUserIdFromStationId } = require('../controllers/utils/utils') 
 
 class MQTTRouters {
 
   async status(id, statusMessage) {
-    console.log(`Message from station: ${id}\nStatus: ${statusMessage}`)
+    console.log(`Message from station: ${id}`)
     const parseStatus = statusMessage.split(' ')
     const keyStations = parseStatus[0]
 
@@ -58,11 +58,33 @@ class MQTTRouters {
     const count_modules = (parsemessage.length - 1) / 4
     const modules = []
     for (let i = 0; i < count_modules; i++) {
+      const parseTime = async (time) => {
+        time = Number(time)
+        const now = new Date()
+        const timeupd = {
+          year: now.getFullYear(),
+          month: now.getMonth(),
+          day: now.getDate(),
+          hour: Math.floor(time / (60 * 60)),
+          minutes: Math.floor((time / 60) % 60),
+          seconds: time % 60
+        }
+        const date = new Date(
+          timeupd.year,
+          timeupd.month,
+          timeupd.day,
+          timeupd.hour,
+          timeupd.minutes,
+          timeupd.seconds
+        );
+        return date.getTime()
+      }
+      const timeUpdate = await parseTime(parsemessage[i * 4 + 4])
       modules.push({
         id: parsemessage[i * 4 + 1],
         type: parsemessage[i * 4 + 2],
         value: parsemessage[i * 4 + 3],
-        time_update: parsemessage[i * 4 + 4]
+        timeUpdate
       })
     }
     return await moduleControllers.updateModules(idStation, modules)
@@ -85,6 +107,13 @@ class MQTTRouters {
     if (parsedData[0] === 'CT') {
       return deviceControllers.connect(parsedData[1])
     }
+  }
+
+  async alarm(id, payload) {
+    const userId = await getUserIdFromStationId(id)
+    const parsedMsg = payload.split(':')
+    const text = `Сработал датчик ${parsedMsg[0]}`
+    return {userId, text}
   }
 }
 

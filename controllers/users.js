@@ -31,7 +31,6 @@ class UserController {
   }
 
   async sign(req, res) {
-    console.log(req.query)
     try {
       const { login, password, code } = req.query
       if (!login) {
@@ -74,6 +73,15 @@ class UserController {
     if (req.code = '1111') {
 
     }
+  }
+  async notification(req, res) {
+    const token = req.body
+    const query = `
+    UPDATE users
+    SET devices = array_append(devices,'${token}')
+    WHERE id = ${req.user.id}`
+    const success = await db.query(query).catch((e) => console.log(e))
+    res.json({ success: !!success })
   }
 }
 

@@ -4,7 +4,6 @@ const Devices = require('./methods/Devices')
 const Modules = require('./methods/Modules')
 
 class ModuleControllers {
-
   async getModules(id_station) {
     const modules = (
       await db.query(`SELECT * FROM modules WHERE station_id = $1`, [
@@ -102,6 +101,7 @@ class ModuleControllers {
     value,
     timeUpdate,
     stationId,
+    userId,
     name = "",
     location = ""
   ) {
@@ -109,18 +109,19 @@ class ModuleControllers {
       const query = `
                   INSERT INTO modules (
                     id_module, type,last_value,
-                    time, location, name, station_id
+                    time, location, name, station_id, user_id
                   ) VALUES 
                     (${idModule}, '${type}',
-                    '${value}', NOW(), 'Комната',
-                    'Модуль',  ${stationId})
+                    '${value}', to_timestamp(${timeUpdate} / 1000.0), 'Комната',
+                    'Модуль',  ${stationId}, ${userId})
                   ON CONFLICT (id_module) DO UPDATE
                   SET id_module = ${idModule},
                       type = ${type},
                       last_value = ${value},
-                      time = NOW()
+                      time = to_timestamp(${timeUpdate} / 1000.0)
                       ${ name ? `, name = '${name}'` : ''}
-                      ${ location ? `, location = '${location}'` : ''}
+                      ${ location ? `, location = '${location}'` : ''},
+                      user_id = ${userId}
                     `
       const id = await db.query(query)
     } catch (e) {
@@ -128,12 +129,13 @@ class ModuleControllers {
     }
   }
   async updateModules(stationId, statusMessage) {
+    const userId = await utils.getUserIdFromStationId(stationId);
     for (let i in statusMessage) {
       const { id, type, value, timeUpdate } = statusMessage[i];
-      await this.updateModule(id, type, value, timeUpdate, stationId);
+      await this.updateModule(id, type, value, timeUpdate, stationId, userId);
     }
     try {
-      const userId = await utils.getUserIdFromStationId(stationId);
+      // const data = await Devices.getStatus(userId)
       const data = await Devices.getStatus(userId)
       return { success: true, type: 'status', data, userId}
     } catch (e) {
@@ -141,22 +143,9 @@ class ModuleControllers {
     }
   }
   async get(req, res) {
-    const id = req.user.id
-    const query = `
-      SELECT location, last_value, m.name, m.time,
-        id_module, t.name as type,  t.image, t.units, t.value_type, t.type as mode
-      FROM modules AS m
-      JOIN stations as s on m.station_id = s.id
-      JOIN module_types AS t ON m.type = t.type_id
-      WHERE s.user_id = ${req.user.id}
-    `
-    const resp = await db.query(query).catch(()=>{})
-    
-    if (resp && resp.rows) {
-      res.json({ success: true, data: resp.rows })
-    } else {
-      res.json({ success: false, message: 'Модуль не найден'})
-    }
+    const userId = req.user.id
+    const modules = await Modules.getModules({userId})
+    res.json({ success: true, data: modules })
   }
   async getOne(req, res) {
     const query = `
