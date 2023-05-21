@@ -7,7 +7,7 @@ class MQTTServer {
   constructor(websocket) {
     this.ws = websocket
     this.notification = new Notification(websocket)
-    const host = process.env.NODE_ENV === 'development' ? process.env.mqttHost : 'localhost'
+    const host = process.env.mqttHost
     const port = process.env.mqttPort || '1883'
     const clientId = process.env.mqttName || `Server`
     const username = process.env.mqttUsername || 'fifthfloor'
